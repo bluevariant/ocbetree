@@ -1,19 +1,24 @@
 class TreeView {
   constructor($dom, adapter) {
     this.adapter = adapter;
-    this.$view = $dom.find('.octotree-tree-view');
+    this.$view = $dom.find(".octotree-tree-view");
     this.$tree = this.$view
-      .find('.octotree-view-body')
-      .on('click.jstree', '.jstree-open>a', ({target}) => {
+      .find(".octotree-view-body")
+      .on("click.jstree", ".jstree-open>a", ({ target }) => {
         this.$jstree.close_node(target);
       })
-      .on('click.jstree', '.jstree-closed>a', ({target}) => {
+      .on("click.jstree", ".jstree-closed>a", ({ target }) => {
         this.$jstree.open_node(target);
       })
-      .on('click', this._onItemClick.bind(this))
+      .on("click", this._onItemClick.bind(this))
       .jstree({
-        core: {multiple: false, animation: 50, worker: false, themes: {responsive: false}},
-        plugins: ['wholerow', 'search', 'truncate']
+        core: {
+          multiple: false,
+          animation: 50,
+          worker: false,
+          themes: { responsive: false },
+        },
+        plugins: ["wholerow", "search", "truncate"],
       });
   }
 
@@ -34,9 +39,9 @@ class TreeView {
       (async () => {
         const startTime = Date.now();
         const loadAll = await this.adapter.shouldLoadEntireTree(repo);
-        node = !loadAll && (node.id === '#' ? {path: ''} : node.original);
+        node = !loadAll && (node.id === "#" ? { path: "" } : node.original);
 
-        this.adapter.loadCodeTree({repo, token, node}, (err, treeData) => {
+        this.adapter.loadCodeTree({ repo, token, node }, (err, treeData) => {
           if (err) {
             if (err.status === 206 && loadAll) {
               // The repo is too big to load all, need to retry
@@ -48,12 +53,16 @@ class TreeView {
           }
 
           cb(treeData);
-          $(document).trigger(EVENT.REPO_LOADED, {repo, loadAll, duration: Date.now() - startTime});
+          $(document).trigger(EVENT.REPO_LOADED, {
+            repo,
+            loadAll,
+            duration: Date.now() - startTime,
+          });
         });
-      })()
+      })();
     };
 
-    this.$tree.one('refresh.jstree', async () => {
+    this.$tree.one("refresh.jstree", async () => {
       await this.syncSelection(repo);
       $(this).trigger(EVENT.VIEW_READY);
     });
@@ -66,13 +75,15 @@ class TreeView {
     const adapter = this.adapter;
 
     this.$view
-      .find('.octotree-view-header')
+      .find(".octotree-view-header")
       .html(
         `<div class="octotree-header-summary">
           <div class="octotree-header-repo">
             <i class="octotree-icon-repo"></i>
             <a href="/${repo.username}">${repo.username}</a> /
-            <a data-pjax href="/${repo.username}/${repo.reponame}">${repo.reponame}</a>
+            <a data-pjax href="/${repo.username}/${repo.reponame}">${
+          repo.reponame
+        }</a>
           </div>
           <div class="octotree-header-branch">
             <i class="octotree-icon-branch"></i>
@@ -80,10 +91,10 @@ class TreeView {
           </div>
         </div>`
       )
-      .on('click', 'a[data-pjax]', function(event) {
+      .on("click", "a[data-pjax]", function (event) {
         event.preventDefault();
         // A.href always return absolute URL, don't want that
-        const href = $(this).attr('href');
+        const href = $(this).attr("href");
         const newTab = event.shiftKey || event.ctrlKey || event.metaKey;
         newTab ? adapter.openInNewTab(href) : adapter.selectFile(href);
       });
@@ -105,39 +116,41 @@ class TreeView {
     if (this.onItemClick(event)) return;
 
     // Handle icon click, fix #122
-    if ($target.is('i.jstree-icon')) {
+    if ($target.is("i.jstree-icon")) {
       $target = $target.parent();
       download = true;
     }
 
-    $target = $target.is('a.jstree-anchor') ? $target : $target.parent();
+    $target = $target.is("a.jstree-anchor") ? $target : $target.parent();
 
-    if ($target.is('.octotree-patch')) {
+    if ($target.is(".octotree-patch")) {
       $target = $target.parent();
     }
 
-    if (!$target.is('a.jstree-anchor')) return;
+    if (!$target.is("a.jstree-anchor")) return;
 
     // Refocus after complete so that keyboard navigation works, fix #158
     const refocusAfterCompletion = () => {
-      $(document).one('pjax:success page:load', () => {
+      $(document).one("pjax:success page:load", () => {
         this.$jstree.get_container().focus();
       });
     };
 
     const adapter = this.adapter;
     const newTab = event.shiftKey || event.ctrlKey || event.metaKey;
-    const href = $target.attr('href');
+    const href = $target.attr("href");
     // The 2nd path is for submodule child links
-    const $icon = $target.children().length ? $target.children(':first') : $target.siblings(':first');
+    const $icon = $target.children().length
+      ? $target.children(":first")
+      : $target.siblings(":first");
 
-    if ($icon.hasClass('commit')) {
+    if ($icon.hasClass("commit")) {
       refocusAfterCompletion();
       newTab ? adapter.openInNewTab(href) : adapter.selectSubmodule(href);
-    } else if ($icon.hasClass('blob')) {
+    } else if ($icon.hasClass("blob")) {
       if (download) {
-        const downloadUrl = $target.attr('data-download-url');
-        const downloadFileName = $target.attr('data-download-filename');
+        const downloadUrl = $target.attr("data-download-url");
+        const downloadFileName = $target.attr("data-download-filename");
         adapter.downloadFile(downloadUrl, downloadFileName);
       } else {
         refocusAfterCompletion();
@@ -162,7 +175,7 @@ class TreeView {
 
     // Convert ['a/b'] to ['a', 'a/b']
     function breakPath(fullPath) {
-      return fullPath.split('/').reduce((res, path, idx) => {
+      return fullPath.split("/").reduce((res, path, idx) => {
         res.push(idx === 0 ? path : `${res[idx - 1]}/${path}`);
         return res;
       }, []);

@@ -6,17 +6,17 @@
  *
  * Plugin truncate path name
  */
-(function($) {
-  'use strict';
+(function ($) {
+  "use strict";
   $.jstree.defaults.truncate = $.noop;
-  $.jstree.plugins.truncate = function(opts, parent) {
-    this.redraw_node = function(obj, deep, callback, force_draw) {
+  $.jstree.plugins.truncate = function (opts, parent) {
+    this.redraw_node = function (obj, deep, callback, force_draw) {
       obj = parent.redraw_node.call(this, obj, deep, callback, force_draw);
       if (obj) {
         $(obj)
-          .find('.jstree-anchor')
+          .find(".jstree-anchor")
           .contents()
-          .filter(function() {
+          .filter(function () {
             // Get text node which is path name
             return this.nodeType === 3;
           })

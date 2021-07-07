@@ -13,12 +13,16 @@ function parseGitmodules(data) {
 
   lines.forEach((line) => {
     let match;
-    if (INI_SECTION.test(line) || INI_COMMENT.test(line) || !(match = line.match(INI_PARAM))) {
+    if (
+      INI_SECTION.test(line) ||
+      INI_COMMENT.test(line) ||
+      !(match = line.match(INI_PARAM))
+    ) {
       return;
     }
 
-    if (match[1] === 'path') lastPath = match[2];
-    else if (match[1] === 'url') submodules[lastPath] = match[2];
+    if (match[1] === "path") lastPath = match[2];
+    else if (match[1] === "url") submodules[lastPath] = match[2];
   });
 
   return submodules;

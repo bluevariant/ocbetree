@@ -1,12 +1,16 @@
 class PjaxAdapter extends Adapter {
   constructor(pjaxContainerSel) {
-    super(['jquery.pjax.js']);
+    super(["jquery.pjax.js"]);
     this._pjaxContainerSel = pjaxContainerSel;
 
     $(document)
-      .on('pjax:start', (e) => this._handlePjaxEvent(e, EVENT.REQ_START, 'pjax:start'))
-      .on('pjax:end', (e) => this._handlePjaxEvent(e, EVENT.REQ_END, 'pjax:end'))
-      .on('pjax:timeout', (e) => e.preventDefault());
+      .on("pjax:start", (e) =>
+        this._handlePjaxEvent(e, EVENT.REQ_START, "pjax:start")
+      )
+      .on("pjax:end", (e) =>
+        this._handlePjaxEvent(e, EVENT.REQ_END, "pjax:end")
+      )
+      .on("pjax:timeout", (e) => e.preventDefault());
   }
 
   // @override
@@ -28,7 +32,7 @@ class PjaxAdapter extends Adapter {
 
     if (pjaxContainer) {
       pageChangeObserver.observe(pjaxContainer, {
-        childList: true
+        childList: true,
       });
     } else {
       // Fall back if DOM has been changed
@@ -66,7 +70,7 @@ class PjaxAdapter extends Adapter {
 
     // If we're on the same page and just navigating to a different anchor
     // Don't bother fetching the page with pjax
-    const pathWithoutAnchor = path.replace(/#.*$/, '');
+    const pathWithoutAnchor = path.replace(/#.*$/, "");
     const isSamePage = location.pathname === pathWithoutAnchor;
     const loadWithPjax = $(this._pjaxContainerSel).length && !isSamePage;
 
@@ -74,9 +78,9 @@ class PjaxAdapter extends Adapter {
       this._patchPjax();
       $.pjax({
         // Needs full path for pjax to work with Firefox as per cross-domain-content setting
-        url: location.protocol + '//' + location.host + path,
+        url: location.protocol + "//" + location.host + path,
         container: this._pjaxContainerSel,
-        timeout: 0 // global timeout doesn't seem to work, use this instead
+        timeout: 0, // global timeout doesn't seem to work, use this instead
       });
     } else {
       super.selectFile(path);

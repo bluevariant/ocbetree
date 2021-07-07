@@ -17,10 +17,11 @@ class Adapter {
    * @api protected
    */
   _loadCodeTreeInternal(opts, transform, cb) {
-    const folders = {'': []};
-    const {path, repo, node} = opts;
+    const folders = { "": [] };
+    const { path, repo, node } = opts;
 
-    opts.encodedBranch = opts.encodedBranch || encodeURIComponent(decodeURIComponent(repo.branch));
+    opts.encodedBranch =
+      opts.encodedBranch || encodeURIComponent(decodeURIComponent(repo.branch));
 
     this._getTree(path, opts, (err, tree) => {
       if (err) return cb(err);
@@ -38,7 +39,7 @@ class Adapter {
 
             // We're done
             if (item === undefined) {
-              let treeData = folders[''];
+              let treeData = folders[""];
               treeData = this._sort(treeData);
               if (!opts.node) {
                 treeData = this._collapse(treeData);
@@ -53,18 +54,18 @@ class Adapter {
 
             // If lazy load and has parent, prefix with parent path
             if (node && node.path) {
-              item.path = node.path + '/' + item.path;
+              item.path = node.path + "/" + item.path;
             }
 
             const path = item.path;
             const type = item.type;
-            const index = path.lastIndexOf('/');
+            const index = path.lastIndexOf("/");
             const name = deXss(path.substring(index + 1)); // Sanitizes, closes #9
 
             item.id = NODE_PREFIX + path;
             item.text = name;
             item.li_attr = {
-              title: path
+              title: path,
             };
 
             // Uses `type` as class name for tree node
@@ -73,59 +74,66 @@ class Adapter {
             await octotree.setNodeIconAndText(this, item);
 
             if (item.patch) {
-              item.text += `<span class="octotree-patch">${this.buildPatchHtml(item)}</span>`;
+              item.text += `<span class="octotree-patch">${this.buildPatchHtml(
+                item
+              )}</span>`;
             }
 
             if (node) {
-              folders[''].push(item);
+              folders[""].push(item);
             } else {
               folders[path.substring(0, index)].push(item);
             }
 
-            if (type === 'tree' || type === 'blob') {
-              if (type === 'tree') {
+            if (type === "tree" || type === "blob") {
+              if (type === "tree") {
                 if (node) item.children = true;
                 else folders[item.path] = item.children = [];
               }
 
               // If item is part of a PR, jump to that file's diff
-              if (item.patch && typeof item.patch.diffId === 'number') {
+              if (item.patch && typeof item.patch.diffId === "number") {
                 const url = this._getPatchHref(repo, item.patch);
                 item.a_attr = {
                   href: url,
-                  'data-download-url': item.url,
-                  'data-download-filename': name
+                  "data-download-url": item.url,
+                  "data-download-filename": name,
                 };
               } else {
                 // Encodes but retains the slashes, see #274
                 const encodedPath = path
-                  .split('/')
+                  .split("/")
                   .map(encodeURIComponent)
-                  .join('/');
-                const url = this._getItemHref(repo, type, encodedPath, opts.encodedBranch);
+                  .join("/");
+                const url = this._getItemHref(
+                  repo,
+                  type,
+                  encodedPath,
+                  opts.encodedBranch
+                );
                 item.a_attr = {
                   href: url,
-                  'data-download-url': url,
-                  'data-download-filename': name
+                  "data-download-url": url,
+                  "data-download-filename": name,
                 };
               }
-            } else if (type === 'commit') {
+            } else if (type === "commit") {
               let moduleUrl = submodules[item.path];
 
               if (moduleUrl) {
                 // Fixes #105
                 // Special handling for submodules hosted in GitHub
-                if (~moduleUrl.indexOf('github.com')) {
+                if (~moduleUrl.indexOf("github.com")) {
                   moduleUrl =
                     moduleUrl
-                      .replace(/^git(:\/\/|@)/, window.location.protocol + '//')
-                      .replace('github.com:', 'github.com/')
-                      .replace(/.git$/, '') +
-                    '/tree/' +
+                      .replace(/^git(:\/\/|@)/, window.location.protocol + "//")
+                      .replace("github.com:", "github.com/")
+                      .replace(/.git$/, "") +
+                    "/tree/" +
                     item.sha;
                   item.text = `${name} @ ${item.sha.substr(0, 7)}`;
                 }
-                item.a_attr = {href: moduleUrl, 'data-skip-pjax': true};
+                item.a_attr = { href: moduleUrl, "data-skip-pjax": true };
               }
             }
           }
@@ -148,40 +156,40 @@ class Adapter {
 
     switch (jqXHR.status) {
       case 0:
-        error = 'Connection error';
+        error = "Connection error";
         message = `Cannot connect to website.
           If your network connection to this website is fine, maybe there is an outage of the API.
           Please try again later.`;
         break;
       case 409:
-        error = 'Empty repository';
-        message = 'This repository is empty.';
+        error = "Empty repository";
+        message = "This repository is empty.";
         break;
       case 401:
-        error = 'Invalid token';
+        error = "Invalid token";
         message = await octotree.getInvalidTokenMessage({
           responseStatus: jqXHR.status,
-          requestHeaders: settings.headers
+          requestHeaders: settings.headers,
         });
         break;
       case 404:
-        error = 'Private repository';
+        error = "Private repository";
         message =
-          'Accessing private repositories requires a GitHub access token. ' +
+          "Accessing private repositories requires a GitHub access token. " +
           'Please go to <a class="settings-btn">Settings</a> and enter a token.';
         break;
       case 403:
-        if (jqXHR.getResponseHeader('X-RateLimit-Remaining') === '0') {
+        if (jqXHR.getResponseHeader("X-RateLimit-Remaining") === "0") {
           // It's kinda specific for GitHub
-          error = 'API limit exceeded';
+          error = "API limit exceeded";
           message =
             'You have exceeded the <a href="https://developer.github.com/v3/#rate-limiting">GitHub API rate limit</a>. ' +
-            'To continue using Octotree, you need to provide a GitHub access token. ' +
+            "To continue using Octotree, you need to provide a GitHub access token. " +
             'Please go to <a class="settings-btn">Settings</a> and enter a token.';
         } else {
-          error = 'Forbidden';
+          error = "Forbidden";
           message =
-            'Accessing private repositories requires a GitHub access token. ' +
+            "Accessing private repositories requires a GitHub access token. " +
             'Please go to <a class="settings-btn">Settings</a> and enter a token.';
         }
 
@@ -195,7 +203,7 @@ class Adapter {
     cb({
       error: `Error: ${error}`,
       message: message,
-      status: jqXHR.status
+      status: jqXHR.status,
     });
   }
 
@@ -204,7 +212,7 @@ class Adapter {
    * @api public
    */
   getCssClass() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -220,7 +228,7 @@ class Adapter {
    * @api public
    */
   init($sidebar) {
-    $sidebar.resizable({handles: 'e', minWidth: this.getMinWidth()});
+    $sidebar.resizable({ handles: "e", minWidth: this.getMinWidth() });
   }
 
   /**
@@ -236,7 +244,7 @@ class Adapter {
    * @api public
    */
   loadCodeTree(opts, cb) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -244,7 +252,7 @@ class Adapter {
    * @api public
    */
   getCreateTokenUrl() {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -252,7 +260,7 @@ class Adapter {
    * @api public
    */
   updateLayout(sidebarPinned, sidebarVisible, sidebarWidth) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -260,7 +268,7 @@ class Adapter {
    * @api public
    */
   getRepoFromPath(token, cb) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -274,7 +282,7 @@ class Adapter {
       if (diffMatch) {
         const el = $(diffMatch[0]);
         if (el.length > 0) {
-          $('html, body').animate({scrollTop: el.offset().top - 68}, 400);
+          $("html, body").animate({ scrollTop: el.offset().top - 68 }, 400);
           return;
         }
       }
@@ -296,7 +304,7 @@ class Adapter {
    * @api public
    */
   openInNewTab(path) {
-    window.open(path, '_blank').focus();
+    window.open(path, "_blank").focus();
   }
 
   /**
@@ -304,10 +312,10 @@ class Adapter {
    * @api public
    */
   downloadFile(path, fileName) {
-    const downloadUrl = path.replace(/\/blob\/|\/src\//, '/raw/');
-    const link = document.createElement('a');
+    const downloadUrl = path.replace(/\/blob\/|\/src\//, "/raw/");
+    const link = document.createElement("a");
 
-    link.setAttribute('href', downloadUrl);
+    link.setAttribute("href", downloadUrl);
 
     // Github will redirect to a different origin (host) for downloading the file.
     // However, the new host hasn't been added in the Content-Security-Policy header from
@@ -315,7 +323,7 @@ class Adapter {
     // Using '_blank' as a trick to not being navigated
     // See more about Content Security Policy at
     // https://www.html5rocks.com/en/tutorials/security/content-security-policy/
-    link.setAttribute('target', '_blank');
+    link.setAttribute("target", "_blank");
 
     link.click();
   }
@@ -327,14 +335,32 @@ class Adapter {
    * Return the patch Html for tree item
    */
   buildPatchHtml(treeItem = {}) {
-    const {action, previous, filesChanged: files, additions, deletions} = treeItem.patch;
-    let patch = '';
-    patch += action === 'added' ? '<span class="text-green">added</span>' : '';
-    patch += action === 'renamed' ? `<span class="text-green" title="${previous}">renamed</span>` : '';
-    patch += action === 'removed' ? `<span class="text-red" title="${previous}">removed</span>` : '';
-    patch += files ? `<span class='octotree-patch-files'>${files} ${files === 1 ? 'file' : 'files'}</span>` : '';
-    patch += additions !== 0 ? `<span class="text-green">+${additions}</span>` : '';
-    patch += deletions !== 0 ? `<span class="text-red">-${deletions}</span>` : '';
+    const {
+      action,
+      previous,
+      filesChanged: files,
+      additions,
+      deletions,
+    } = treeItem.patch;
+    let patch = "";
+    patch += action === "added" ? '<span class="text-green">added</span>' : "";
+    patch +=
+      action === "renamed"
+        ? `<span class="text-green" title="${previous}">renamed</span>`
+        : "";
+    patch +=
+      action === "removed"
+        ? `<span class="text-red" title="${previous}">removed</span>`
+        : "";
+    patch += files
+      ? `<span class='octotree-patch-files'>${files} ${
+          files === 1 ? "file" : "files"
+        }</span>`
+      : "";
+    patch +=
+      additions !== 0 ? `<span class="text-green">+${additions}</span>` : "";
+    patch +=
+      deletions !== 0 ? `<span class="text-red">-${deletions}</span>` : "";
 
     return patch;
   }
@@ -345,7 +371,7 @@ class Adapter {
    * @api protected
    */
   _getTree(path, opts, cb) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -354,7 +380,7 @@ class Adapter {
    * @api protected
    */
   _getSubmodules(tree, opts, cb) {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /**
@@ -374,12 +400,17 @@ class Adapter {
 
   _sort(folder) {
     folder.sort((a, b) => {
-      if (a.type === b.type) return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
-      return a.type === 'blob' ? 1 : -1;
+      if (a.type === b.type)
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      return a.type === "blob" ? 1 : -1;
     });
 
     folder.forEach((item) => {
-      if (item.type === 'tree' && item.children !== true && item.children.length > 0) {
+      if (
+        item.type === "tree" &&
+        item.children !== true &&
+        item.children.length > 0
+      ) {
         this._sort(item.children);
       }
     });
@@ -389,11 +420,15 @@ class Adapter {
 
   _collapse(folder) {
     return folder.map((item) => {
-      if (item.type === 'tree') {
+      if (item.type === "tree") {
         item.children = this._collapse(item.children);
-        if (item.children.length === 1 && item.children[0].type === 'tree' && item.a_attr) {
+        if (
+          item.children.length === 1 &&
+          item.children[0].type === "tree" &&
+          item.a_attr
+        ) {
           const onlyChild = item.children[0];
-          const path = item.a_attr['data-download-filename'];
+          const path = item.a_attr["data-download-filename"];
 
           /**
            * Using a_attr rather than item.text to concat in order to
@@ -408,7 +443,7 @@ class Adapter {
            * 'src/adapters/' + 'github.js<span class="octotree-patch">+1</span>'
            *
            */
-          onlyChild.text = path + '/' + onlyChild.text;
+          onlyChild.text = path + "/" + onlyChild.text;
 
           return onlyChild;
         }

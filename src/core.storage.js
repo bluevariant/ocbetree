@@ -4,9 +4,12 @@ class ExtStore {
     this._tempChanges = {};
 
     if (!this._isSafari) {
-      this._setInExtensionStorage = promisify(chrome.storage.local, 'set');
-      this._getInExtensionStorage = promisify(chrome.storage.local, 'get');
-      this._removeInExtensionStorage = promisify(chrome.storage.local, 'remove');
+      this._setInExtensionStorage = promisify(chrome.storage.local, "set");
+      this._getInExtensionStorage = promisify(chrome.storage.local, "get");
+      this._removeInExtensionStorage = promisify(
+        chrome.storage.local,
+        "remove"
+      );
     }
 
     // Initialize default values
@@ -24,7 +27,7 @@ class ExtStore {
   }
 
   _setupOnChangeEvent() {
-    window.addEventListener('storage', (evt) => {
+    window.addEventListener("storage", (evt) => {
       if (this._isOctotreeKey(evt.key)) {
         this._notifyChange(evt.key, evt.oldValue, evt.newValue);
       }
@@ -42,7 +45,7 @@ class ExtStore {
   }
 
   _isOctotreeKey(key) {
-    return key.startsWith('octotree');
+    return key.startsWith("octotree");
   }
 
   // Debounce and group the trigger of EVENT.STORE_CHANGE because the
@@ -81,31 +84,32 @@ class ExtStore {
   }
 
   // Private
-  async _innerGet (key) {
-    const result = (key.endsWith('local') || this._isSafari)
-      ? await this._getLocal(key)
-      : await this._getInExtensionStorage(key);
+  async _innerGet(key) {
+    const result =
+      key.endsWith("local") || this._isSafari
+        ? await this._getLocal(key)
+        : await this._getInExtensionStorage(key);
 
     return result[key];
   }
 
-  _innerSet (key, value) {
-    const payload = {[key]: value};
-    return (key.endsWith('local') || this._isSafari)
+  _innerSet(key, value) {
+    const payload = { [key]: value };
+    return key.endsWith("local") || this._isSafari
       ? this._setLocal(payload)
       : this._setInExtensionStorage(payload);
   }
 
-  _innerRemove (key) {
-    return (key.endsWith('local') || this._isSafari)
+  _innerRemove(key) {
+    return key.endsWith("local") || this._isSafari
       ? this._removeLocal(key)
       : this._removeInExtensionStorage(key);
   }
 
-  _getLocal (key) {
+  _getLocal(key) {
     return new Promise((resolve) => {
       const value = parse(localStorage.getItem(key));
-      resolve({[key]: value});
+      resolve({ [key]: value });
     });
 
     function parse(val) {
@@ -117,7 +121,7 @@ class ExtStore {
     }
   }
 
-  _setLocal (obj) {
+  _setLocal(obj) {
     return new Promise(async (resolve) => {
       const entries = Object.entries(obj);
 
@@ -134,8 +138,8 @@ class ExtStore {
           localStorage.setItem(key, value);
         } catch (e) {
           const msg =
-            'Octotree cannot save its settings. ' +
-            'If the local storage for this domain is full, please clean it up and try again.';
+            "Octotree cannot save its settings. " +
+            "If the local storage for this domain is full, please clean it up and try again.";
           console.error(msg, e);
         }
         resolve();
@@ -143,7 +147,7 @@ class ExtStore {
     });
   }
 
-  _removeLocal (key) {
+  _removeLocal(key) {
     return new Promise((resolve) => {
       localStorage.removeItem(key);
       resolve();
@@ -152,13 +156,13 @@ class ExtStore {
 }
 
 function promisify(fn, method) {
-  if (typeof fn[method] !== 'function') {
+  if (typeof fn[method] !== "function") {
     throw new Error(`promisify: fn does not have ${method} method`);
   }
 
-  return function(...args) {
-    return new Promise(function(resolve, reject) {
-      fn[method](...args, function(res) {
+  return function (...args) {
+    return new Promise(function (resolve, reject) {
+      fn[method](...args, function (res) {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
@@ -169,4 +173,4 @@ function promisify(fn, method) {
   };
 }
 
-window.extStore = new ExtStore(STORE, DEFAULTS)
+window.extStore = new ExtStore(STORE, DEFAULTS);

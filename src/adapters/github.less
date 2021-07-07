@@ -69,7 +69,7 @@
         display: block;
       }
 
-      input[type='text'],
+      input[type="text"],
       textarea {
         padding: 4px 8px;
         color: @dark;
@@ -115,10 +115,10 @@
 
     .octotree-tree-view {
       overflow: auto;
-      -webkit-user-select: none;  /* Chrome all / Safari all */
-      -moz-user-select: none;     /* Firefox all */
-      -ms-user-select: none;      /* IE 10+ */
-      user-select: none;          /* Likely future */
+      -webkit-user-select: none; /* Chrome all / Safari all */
+      -moz-user-select: none; /* Firefox all */
+      -ms-user-select: none; /* IE 10+ */
+      user-select: none; /* Likely future */
 
       .octotree-view-header {
         padding-left: 5px;
@@ -187,7 +187,7 @@
         outline: none;
         padding-right: 0;
         text-decoration: none;
-        width: calc(~'100% - 20px');
+        width: calc(~"100% - 20px");
         display: inline-flex;
 
         & > span {
@@ -300,7 +300,8 @@
         padding-left: 8px;
       }
       .octotree-view-body {
-        input[type="checkbox"], input[type="radio"] {
+        input[type="checkbox"],
+        input[type="radio"] {
           vertical-align: middle;
         }
       }
@@ -348,7 +349,7 @@
           }
         }
 
-        input[type='text'],
+        input[type="text"],
         textarea {
           width: 100%;
         }
@@ -452,7 +453,7 @@
       position: absolute;
       text-align: left;
       text-transform: none;
-      top: calc(~'100% + 2px');
+      top: calc(~"100% + 2px");
       transition: opacity 0.3s linear;
       white-space: normal;
       width: 260px;
@@ -483,7 +484,7 @@
       }
       & > .arrow:after {
         border-width: 5px;
-        content: '';
+        content: "";
         top: 1px;
         margin-left: -5px;
         border-top-width: 0;
@@ -572,7 +573,7 @@
         animation: loading 0.5s infinite linear;
 
         &:after {
-          content: '';
+          content: "";
         }
 
         @keyframes loading {

@@ -6,7 +6,8 @@
     "start": "gulp",
     "watch": "gulp",
     "build": "gulp build",
-    "dist": "gulp dist --production"
+    "dist": "gulp dist --production",
+    "style": "prettier --write \"./src/**/*.(js|css|less|html)\""
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "jpm": "^1.0.4",
     "map-stream": "*",
     "mocha": "2.0.1",
+    "prettier": "^2.3.2",
     "request": "^2.88.0",
     "starx": "~0.1.7",
     "stream-series": "*",
