@@ -1,10 +1,33 @@
+//* {
+//  /* custom scrollbar */
+//
+//  &::-webkit-scrollbar {
+//    width: 20px;
+//  }
+//
+//  &::-webkit-scrollbar-track {
+//    background-color: transparent;
+//  }
+//
+//  &::-webkit-scrollbar-thumb {
+//    background-color: var(--color-border-primary);
+//    border-radius: 20px;
+//    border: 6px solid transparent;
+//    background-clip: content-box;
+//  }
+//
+//  &::-webkit-scrollbar-thumb:hover {
+//    background-color: var(--color-border-primary);
+//  }
+//}
+
 .octotree-sidebar.octotree-github-sidebar {
   box-sizing: border-box;
   right: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
   left: 0 !important;
-  width: 232;
+  width: 232px;
   overflow: visible;
   padding-bottom: @footer-height;
   padding-top: @header-height;
@@ -27,9 +50,9 @@
   }
 
   .octotree-footer {
-    background-color: #f1f8ff;
-    border-top: 1px solid #c8e1ff;
-    border-right: 1px solid #c8e1ff;
+    background-color: var(--color-border-primary);
+    border-top: 1px solid var(--color-border-primary);
+    border-right: 1px solid var(--color-border-primary);
     bottom: 0;
     font-size: 11px;
     height: @footer-height;
@@ -56,13 +79,13 @@
   .octotree-views {
     height: 100%;
     box-sizing: border-box;
-    border-right: 1px solid @gray-less;
-    background-color: #fafbfc;
+    border-right: 1px solid var(--color-border-primary);
+    background-color: var(--color-bg-canvas);
 
     .octotree-view {
       display: none;
       box-sizing: border-box;
-      color: @dark;
+      color: var(--color-text-primary);
       height: 100%;
 
       &.current {
@@ -72,7 +95,7 @@
       input[type="text"],
       textarea {
         padding: 4px 8px;
-        color: @dark;
+        color: var(--color-text-primary);
         border-radius: 3px;
         outline: none;
       }
@@ -85,8 +108,8 @@
         position: absolute;
         display: flex;
         align-items: center;
-        background-color: @dark-less;
-        border-right: 1px @dark solid;
+        background-color: var(--color-header-bg);
+        border-right: 1px var(--color-border-primary) solid;
         color: white;
         font-size: 16px;
         font-weight: normal;
@@ -119,6 +142,27 @@
       -moz-user-select: none; /* Firefox all */
       -ms-user-select: none; /* IE 10+ */
       user-select: none; /* Likely future */
+
+      /* custom scrollbar */
+
+      &::-webkit-scrollbar {
+        width: 20px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--color-border-primary);
+        border-radius: 20px;
+        border: 6px solid transparent;
+        background-clip: content-box;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-border-primary);
+      }
 
       .octotree-view-header {
         padding-left: 5px;
@@ -183,7 +227,7 @@
       }
 
       .jstree-anchor {
-        color: @dark !important;
+        color: var(--color-text-primary) !important;
         outline: none;
         padding-right: 0;
         text-decoration: none;
@@ -191,10 +235,12 @@
         display: inline-flex;
 
         & > span {
-          color: @dark !important;
+          color: var(--color-text-primary) !important;
         }
+
         &:hover {
-          text-decoration: none !important;
+          text-decoration: underline !important;
+          color: var(--color-text-link) !important;
         }
       }
 
@@ -214,10 +260,10 @@
         .jstree-wholerow {
           height: auto;
           &-hovered {
-            background: #eff0f1;
+            background: var(--color-bg-tertiary);
           }
           &-clicked {
-            background: #dbeeff;
+            background: var(--color-bg-tertiary);
           }
         }
 
@@ -246,12 +292,17 @@
             left: 3px;
           }
           .jstree-open > .jstree-ocl {
-            .icon-v2(@octicons-chevron-down, @color: @dark, @hover-color: @dark, @font-size: 12px);
+            .icon-v2(@octicons-chevron-down, @color: var(--color-text-primary), @hover-color: var(--color-text-link), @font-size: 12px);
           }
           .jstree-closed > .jstree-ocl {
-            .icon-v2(@octicons-chevron-right, @color: @dark, @hover-color: @dark, @font-size: 12px);
+            .icon-v2(@octicons-chevron-right, @color: var(--color-text-primary), @hover-color: var(--color-text-link), @font-size: 12px);
           }
         }
+      }
+
+      .jstree-clicked {
+        text-decoration: underline !important;
+        color: var(--color-text-link) !important;
       }
 
       .jstree-icon.tree,
@@ -462,6 +513,7 @@
       &:hover {
         color: black;
       }
+
       &.show {
         opacity: 1;
       }
@@ -565,9 +617,9 @@
 
       .octotree-spin--loader {
         border-radius: 50%;
-        border: 2px solid @gray;
-        border-top: 2px solid rgba(0, 0, 0, 0);
-        border-left: 2px solid rgba(0, 0, 0, 0);
+        border: 2px solid var(--color-text-link);
+        border-top: 2px solid transparent;
+        border-left: 2px solid transparent;
         width: 16px;
         height: 16px;
         animation: loading 0.5s infinite linear;
@@ -605,3 +657,135 @@
     }
   }
 }
+
+//.octotree-free-plus-tabs {
+//  position: sticky;
+//  top: 0;
+//  z-index: 999;
+//  height: 36px;
+//  background: var(--color-bg-canvas);
+//  display: flex;
+//  align-items: center;
+//  cursor: default;
+//  //margin-bottom: 24px;
+//  border-bottom: 1px solid var(--color-btn-border);
+//  overflow-x: auto;
+//  -ms-overflow-style: none; /* IE and Edge */
+//  scrollbar-width: none;
+//
+//  &::-webkit-scrollbar {
+//    display: none;
+//  }
+//
+//  .octotree-free-plus-tabs__item {
+//    height: 100%;
+//    border-bottom: 0;
+//    display: inline-block;
+//    border-top-left-radius: 3px;
+//    border-top-right-radius: 3px;
+//    padding-bottom: 2px;
+//    cursor: pointer;
+//    position: relative;
+//    white-space: nowrap;
+//    background: var(--color-bg-canvas);
+//
+//    .octotree-free-plus-tabs__close {
+//      //position: absolute;
+//      //top: 0;
+//      //right: 40px;
+//      //height: 100%;
+//      //background: var(--color-bg-canvas);
+//      //align-items: center;
+//      //display: flex;
+//      //z-index: 999;
+//      display: inline-block;
+//      font-style: normal;
+//      font-size: small;
+//
+//      &:hover {
+//        color: var(--color-text-link);
+//      }
+//    }
+//
+//    &:hover .octotree-free-plus-tabs__close {
+//      //display: flex;
+//    }
+//
+//    &.temp {
+//      font-style: italic;
+//    }
+//
+//    &:not(:first-child) {
+//      .octotree-free-plus-tabs__name {
+//        span {
+//          border-left: 1px solid var(--color-btn-border);
+//        }
+//      }
+//    }
+//
+//    &:hover,
+//    &.active:hover {
+//      border-bottom: 2px solid #f9826c;
+//      padding-bottom: 0;
+//    }
+//
+//    &.active:hover {
+//      //border-bottom: 0;
+//      //padding-bottom: 2px;
+//    }
+//
+//    &.active {
+//      //border: 1px solid var(--color-btn-border);
+//      background: var(--color-btn-bg);
+//      border-bottom: 2px solid #f9826c;
+//      padding-bottom: 0;
+//      //color: var(--color-text-link);
+//      //font-weight: bold;
+//
+//      .octotree-free-plus-tabs__name {
+//        span {
+//          border-left: 0;
+//        }
+//      }
+//
+//      .close {
+//        background: var(--color-btn-bg);
+//      }
+//    }
+//
+//    .octotree-free-plus-tabs__name {
+//      display: flex;
+//      height: 100%;
+//      align-items: center;
+//      justify-content: center;
+//      -webkit-touch-callout: none; /* iOS Safari */
+//      -webkit-user-select: none; /* Safari */
+//      -khtml-user-select: none; /* Konqueror HTML */
+//      -moz-user-select: none; /* Old versions of Firefox */
+//      -ms-user-select: none; /* Internet Explorer/Edge */
+//      user-select: none;
+//
+//      span {
+//        display: inline-block;
+//        padding: 0 12px;
+//      }
+//    }
+//  }
+//
+//  .octotree-free-plus-tabs__item.active + .octotree-free-plus-tabs__item,
+//  .octotree-free-plus-tabs__item.ui-sortable-helper {
+//    .octotree-free-plus-tabs__name {
+//      span {
+//        border-left: 0;
+//      }
+//    }
+//  }
+//}
+//
+//.fix-md-sticky {
+//  top: 35px !important;
+//}
+//
+//.ocbetree-shadow {
+//  display: none;
+//}
