@@ -5,14 +5,20 @@ class Ocbetree {
     this.context = {
       repository: undefined,
     };
-    onLocationChanged(this.onLocationChanged);
+    onLocationChanged((href, oldHref) => this.onLocationChanged(href, oldHref));
   }
 
   onLocationChanged(href) {
     const url = new URL(href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
-    console.log(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
+    if (OcbetreeUtils.isBlob(this.context.repository, path)) {
+      OcbetreeUtils.removeAllAttrs(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
+      $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr(
+        OcbetreeConstants.GITHUB.TAB_ATTR,
+        path
+      );
+    }
   }
 
   assign(context = {}) {

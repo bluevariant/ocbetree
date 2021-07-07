@@ -13,7 +13,8 @@ const GH_RESPONSIVE_BREAKPOINT = 1010;
 
 class GitHub extends PjaxAdapter {
   constructor() {
-    super(GH_PJAX_CONTAINER_SEL);
+    // super(GH_PJAX_CONTAINER_SEL);
+    super(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
   }
 
   // @override
