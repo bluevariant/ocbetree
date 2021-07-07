@@ -166,8 +166,8 @@ function buildJs(prefix = ".", ctx = {}) {
     `${prefix}/src/view.error.js`,
     `${prefix}/src/view.tree.js`,
     `${prefix}/src/view.options.js`,
-    `${prefix}/src/main.js`,
     ...ocbetreeJsFiles,
+    `${prefix}/src/main.js`,
   ];
 
   return pipe(
