@@ -2,6 +2,8 @@ $(document).ready(() => {
   octotree.load(loadExtension);
 
   async function loadExtension(activationOpts = {}) {
+    Ocbetree.invoke();
+
     const $html = $("html");
     const $document = $(document);
     const $dom = $(TEMPLATE);
@@ -141,6 +143,8 @@ $(document).ready(() => {
             $toggler.show();
           }
         } else if (repo) {
+          Ocbetree.invoke().assign({ repository: repo });
+
           if ((await extStore.get(STORE.PINNED)) && !isSidebarVisible()) {
             // If we're in pin mode but sidebar doesn't show yet, show it.
             // Note if we're from another page back to code page, sidebar is "pinned", but not visible.

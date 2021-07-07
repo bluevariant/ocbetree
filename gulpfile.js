@@ -59,6 +59,7 @@ gulp.task("wex:js", ["wex:js:ext"], () => {
     "./libs/jquery.js",
     "./libs/jquery-ui.js",
     "./libs/jstree.js",
+    "./libs/lodash.min.js",
     "./libs/keymaster.js",
     "./tmp/ondemand.js",
     "./tmp/octotree.js",
