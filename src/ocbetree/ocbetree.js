@@ -11,6 +11,8 @@ class Ocbetree {
   onLocationChanged(href) {
     const url = new URL(href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
+
+    console.log(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
   }
 
   assign(context = {}) {
