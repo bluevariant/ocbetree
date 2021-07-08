@@ -110,8 +110,6 @@ class Ocbetree {
   assign(context = {}) {
     this.context = Object.assign(this.context, context);
 
-    console.log(this.context);
-
     return this;
   }
 }
