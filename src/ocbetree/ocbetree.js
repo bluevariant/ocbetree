@@ -16,8 +16,15 @@ class Ocbetree {
 
         this.context.isFirstLoad = false;
       });
+      requestIdleCallback(() => this.makingTabs(), { timeout: 1000 });
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
+  }
+
+  makingTabs(path) {
+    path = OcbetreeUtils.getPathWithoutAnchor(path);
+
+    console.log("making tabs", path);
   }
 
   handleLocationChanged(href) {
@@ -45,6 +52,7 @@ class Ocbetree {
     if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
       $mainContent.removeAttr("style");
       $contentElements.attr("style", "display:none");
+      this.makingTabs(path);
 
       return;
     }
@@ -60,6 +68,7 @@ class Ocbetree {
     $parent.append(element);
     $(element).html($mainContent.html());
     $mainContent.attr("style", "display:none");
+    this.makingTabs(path);
     this.assign({
       cache: Object.assign(this.context.cache, {
         [path]: {
@@ -148,11 +157,14 @@ class Ocbetree {
       history.pushState({}, null, path);
       this.fixFooter();
       window.scrollTo(cacheData.scroll.x, this.calcScrollTo(path));
+      this.makingTabs(path);
 
       document.title = cacheData.title;
 
       return true;
     }
+
+    this.makingTabs(path);
 
     return false;
   }
