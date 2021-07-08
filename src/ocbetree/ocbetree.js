@@ -88,6 +88,9 @@ class Ocbetree {
 
   restoreFromCache(path) {
     path = OcbetreeUtils.getPathWithoutAnchor(path);
+
+    if (!OcbetreeUtils.isBlob(this.context.repository, path)) return false;
+
     const cacheData = this.context.cache[path];
 
     if (cacheData) {
