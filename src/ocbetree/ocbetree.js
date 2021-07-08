@@ -29,7 +29,9 @@ class Ocbetree {
 
     if (!$container) return;
 
-    if ($("." + containerClass).length === 0) {
+    let $1 = $("." + containerClass);
+
+    if ($1.length === 0) {
       const $tabs = $(`<div class="${containerClass}"></div>`);
 
       $tabs.prepend(
@@ -43,6 +45,8 @@ class Ocbetree {
         $window.scrollLeft(),
         $window.scrollTop() - OcbetreeConstants.GITHUB.TABS_HEIGHT
       );
+
+      $1 = $tabs;
     }
   }
 
