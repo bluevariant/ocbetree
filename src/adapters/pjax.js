@@ -85,6 +85,7 @@ class PjaxAdapter extends Adapter {
         url: location.protocol + "//" + location.host + path,
         container: this._pjaxContainerSel,
         timeout: 0, // global timeout doesn't seem to work, use this instead
+        scrollTo: Ocbetree.invoke().calcScrollTo(path),
       });
     } else {
       super.selectFile(path);

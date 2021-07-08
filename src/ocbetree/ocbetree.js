@@ -6,15 +6,15 @@ class Ocbetree {
     this.context = {
       repository: undefined,
       cache: {},
-      isFirstLoad: false,
+      isFirstLoad: true,
     };
     onLocationChanged((href, oldHref) => {
       requestIdleCallback(() => {
-        if (!this.context.isFirstLoad) {
+        if (this.context.isFirstLoad) {
           this.handleLocationChanged(href, oldHref);
         }
 
-        this.context.isFirstLoad = true;
+        this.context.isFirstLoad = false;
       });
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
@@ -33,6 +33,8 @@ class Ocbetree {
 
     if (["pjax:end"].includes(pjaxEventName)) {
       this.handleCache(path);
+    } else if (["pjax:start"].includes(pjaxEventName)) {
+      this.fixFooter();
     }
   }
 
@@ -69,6 +71,15 @@ class Ocbetree {
         },
       }),
     });
+
+    if (this.context.isFirstLoad) {
+      this.fixFooter();
+      window.scrollTo({
+        top: this.calcScrollTo(path),
+        left: 0,
+        behavior: "smooth",
+      });
+    }
   }
 
   handleScroll() {
@@ -82,6 +93,32 @@ class Ocbetree {
       this.context.cache[path].scroll.x = x;
       this.context.cache[path].scroll.y = y;
     }
+  }
+
+  fixFooter() {
+    const defaultScroll = this.defaultScroll();
+
+    $("body").css("min-height", `calc(100vh + ${defaultScroll + 2}px)`);
+  }
+
+  calcScrollTo(path) {
+    path = OcbetreeUtils.getPathWithoutAnchor(path);
+
+    const defaultScroll = this.defaultScroll();
+    const cacheData = this.context.cache[path];
+    let pathScroll = 0;
+
+    if (cacheData) {
+      pathScroll = cacheData.scroll.y;
+    }
+
+    return Math.max(pathScroll, defaultScroll);
+  }
+
+  defaultScroll() {
+    const github = OcbetreeConstants.GITHUB;
+
+    return github.INITIAL_SCROLL_TOP + github.TABS_HEIGHT;
   }
 
   isCached(path) {
@@ -107,7 +144,8 @@ class Ocbetree {
       $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`).attr("style", "display:none");
       $query.removeAttr("style");
       history.pushState({}, null, path);
-      window.scrollTo(cacheData.scroll.x, cacheData.scroll.y);
+      this.fixFooter();
+      window.scrollTo(cacheData.scroll.x, this.calcScrollTo(path));
 
       document.title = cacheData.title;
 
