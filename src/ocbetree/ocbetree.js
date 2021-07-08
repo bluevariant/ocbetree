@@ -31,8 +31,6 @@ class Ocbetree {
     const url = new URL(location.href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
-    console.log(path, pjaxEventName);
-
     if (["pjax:end"].includes(pjaxEventName)) {
       this.handleCache(path);
     }
