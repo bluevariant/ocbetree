@@ -6,11 +6,16 @@ class Ocbetree {
     this.context = {
       repository: undefined,
       cache: {},
+      isFirstLoad: false,
     };
     onLocationChanged((href, oldHref) => {
       requestIdleCallback(
         () => {
-          this.handleLocationChanged(href, oldHref);
+          if (!this.context.isFirstLoad) {
+            this.handleLocationChanged(href, oldHref);
+          }
+
+          this.context.isFirstLoad = true;
         },
         { timeout: 1000 }
       );
@@ -29,14 +34,14 @@ class Ocbetree {
     const url = new URL(location.href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
+    console.log(path, pjaxEventName);
+
     if (["pjax:end"].includes(pjaxEventName)) {
       this.handleCache(path);
     }
   }
 
   handleCache(path) {
-    if (this.context.cache[path]) return;
-
     const $contentElements = $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`);
     const $mainContent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
 
@@ -46,6 +51,8 @@ class Ocbetree {
 
       return;
     }
+
+    if (this.context.cache[path]) return;
 
     const $parent = $mainContent.parent();
     const element = document.createElement("div");
