@@ -89,16 +89,21 @@ class Ocbetree {
   restoreFromCache(path) {
     path = OcbetreeUtils.getPathWithoutAnchor(path);
 
-    if (!OcbetreeUtils.isBlob(this.context.repository, path)) return false;
-
     const cacheData = this.context.cache[path];
 
     if (cacheData) {
       const query = `[${OcbetreeConstants.GITHUB.TAB_ATTR}="${path}"]`;
+      const $query = $(query);
+
+      if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
+        $query.remove();
+
+        return false;
+      }
 
       $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr("style", "display:none");
       $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`).attr("style", "display:none");
-      $(query).removeAttr("style");
+      $query.removeAttr("style");
       history.pushState({}, null, path);
       window.scrollTo(cacheData.scroll.x, cacheData.scroll.y);
 
