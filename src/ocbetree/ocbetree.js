@@ -37,22 +37,23 @@ class Ocbetree {
     if (this.context.cache[path]) return;
 
     const $contentElements = $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`);
+    const $mainContent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
 
     if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
-      $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).removeAttr("style");
+      $mainContent.removeAttr("style");
       $contentElements.attr("style", "display:none");
 
       return;
     }
 
-    const $parent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).parent();
+    const $parent = $mainContent.parent();
     const element = document.createElement("div");
 
     $contentElements.attr("style", "display:none");
     element.setAttribute(OcbetreeConstants.GITHUB.TAB_ATTR, path);
     $parent.append(element);
-    $(element).html($(OcbetreeConstants.GITHUB.BLOB_CONTAINER).html());
-    $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr("style", "display:none");
+    $(element).html($mainContent.html());
+    $mainContent.attr("style", "display:none");
     this.assign({
       cache: Object.assign(this.context.cache, {
         [path]: {
