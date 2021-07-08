@@ -49,6 +49,7 @@ class Ocbetree {
 
     const $parent = $mainContent.parent();
     const element = document.createElement("div");
+    const $window = $(window);
 
     $contentElements.attr("style", "display:none");
     element.setAttribute(OcbetreeConstants.GITHUB.TAB_ATTR, path);
@@ -60,8 +61,8 @@ class Ocbetree {
         [path]: {
           title: document.title,
           scroll: {
-            x: 0,
-            y: 0,
+            x: $window.scrollLeft(),
+            y: $window.scrollTop(),
           },
         },
       }),
