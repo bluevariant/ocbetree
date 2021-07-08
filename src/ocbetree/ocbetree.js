@@ -36,6 +36,13 @@ class Ocbetree {
         '<div class="welcome">Ocbetree <span>🌼</span> with love!</div>'
       );
       $container.prepend($tabs);
+
+      const $window = $(window);
+
+      window.scrollTo(
+        $window.scrollLeft(),
+        $window.scrollTop() - OcbetreeConstants.GITHUB.TABS_HEIGHT
+      );
     }
   }
 
