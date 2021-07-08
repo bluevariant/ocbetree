@@ -95,6 +95,9 @@ class GitHub extends PjaxAdapter {
       const marginLeft = Math.max(SPACING, autoMarginLeft - sidebarWidth);
       $containers.each(function () {
         const $container = $(this);
+
+        if ($container.is(".markdown-body")) return;
+
         const paddingLeft = ($container.innerWidth() - $container.width()) / 2;
         $container.css("margin-left", marginLeft - paddingLeft);
       });
