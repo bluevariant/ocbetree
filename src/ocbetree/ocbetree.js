@@ -36,11 +36,11 @@ class Ocbetree {
   handleCache(path) {
     if (this.context.cache[path]) return;
 
-    const $contentElement = $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`);
+    const $contentElements = $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`);
 
     if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
       $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).removeAttr("style");
-      $contentElement.attr("style", "display:none");
+      $contentElements.attr("style", "display:none");
 
       return;
     }
@@ -48,7 +48,7 @@ class Ocbetree {
     const $parent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).parent();
     const element = document.createElement("div");
 
-    $contentElement.attr("style", "display:none");
+    $contentElements.attr("style", "display:none");
     // element.setAttribute("style", "display:none");
     element.setAttribute(OcbetreeConstants.GITHUB.TAB_ATTR, path);
     $parent.append(element);
