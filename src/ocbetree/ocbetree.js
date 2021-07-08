@@ -24,7 +24,17 @@ class Ocbetree {
   makingTabs(path) {
     path = OcbetreeUtils.getPathWithoutAnchor(path);
 
-    console.log("making tabs", path);
+    const $container = $(OcbetreeConstants.GITHUB.MAIN);
+    const containerClass = "ocbetree-tabs";
+
+    if (!$container) return;
+
+    if ($("." + containerClass).length === 0) {
+      const $tabs = $(`<div class="${containerClass}"></div>`);
+
+      $tabs.prepend('<div class="welcome">Ocbetree <span>🌼</span></div>');
+      $container.prepend($tabs);
+    }
   }
 
   handleLocationChanged(href) {

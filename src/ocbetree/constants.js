@@ -8,4 +8,5 @@ OcbetreeConstants.GITHUB = {
   INITIAL_SCROLL_TOP: 386,
   TABS_HEIGHT: 50,
   FOOTER: ".footer",
+  MAIN: ".application-main",
 };
