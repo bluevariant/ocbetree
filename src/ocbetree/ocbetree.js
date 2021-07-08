@@ -31,6 +31,12 @@ class Ocbetree {
 
     let $1 = $("." + containerClass);
 
+    if (!this.isWorkingOnRepo()) {
+      $1.remove();
+
+      return;
+    }
+
     if ($1.length === 0) {
       const $tabs = $(`<div class="${containerClass}"></div>`);
 
@@ -48,6 +54,15 @@ class Ocbetree {
 
       $1 = $tabs;
     }
+  }
+
+  isWorkingOnRepo() {
+    if (!this.context.repository) return false;
+
+    const path = OcbetreeUtils.getPathWithoutAnchor();
+    const repo = this.context.repository;
+
+    return path.startsWith(`/${repo.username}/${repo.reponame}`);
   }
 
   handleLocationChanged(href) {
