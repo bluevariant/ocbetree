@@ -9,16 +9,13 @@ class Ocbetree {
       isFirstLoad: false,
     };
     onLocationChanged((href, oldHref) => {
-      requestIdleCallback(
-        () => {
-          if (!this.context.isFirstLoad) {
-            this.handleLocationChanged(href, oldHref);
-          }
+      requestIdleCallback(() => {
+        if (!this.context.isFirstLoad) {
+          this.handleLocationChanged(href, oldHref);
+        }
 
-          this.context.isFirstLoad = true;
-        },
-        { timeout: 1000 }
-      );
+        this.context.isFirstLoad = true;
+      });
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
   }
