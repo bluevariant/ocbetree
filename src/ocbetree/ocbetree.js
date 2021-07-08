@@ -8,9 +8,12 @@ class Ocbetree {
       cache: {},
     };
     onLocationChanged((href, oldHref) => {
-      requestIdleCallback(() => {
-        this.handleLocationChanged(href, oldHref);
-      });
+      requestIdleCallback(
+        () => {
+          this.handleLocationChanged(href, oldHref);
+        },
+        { timeout: 1000 }
+      );
     });
   }
 
@@ -34,29 +37,48 @@ class Ocbetree {
     if (this.context.cache[path]) return;
 
     if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
+      $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).removeAttr("style");
+      $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`).attr("style", "display:none");
+
       return;
     }
 
-    const cloneContainer = OcbetreeUtils.cloneElement(
-      OcbetreeConstants.GITHUB.BLOB_CONTAINER
-    );
     const $parent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).parent();
+    const element = document.createElement("main");
 
-    OcbetreeUtils.removeAllAttrs(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
-    $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr(
-      OcbetreeConstants.GITHUB.TAB_ATTR,
-      path
-    );
-    $parent.prepend(cloneContainer);
+    element.setAttribute("style", "display:none");
+    element.setAttribute(OcbetreeConstants.GITHUB.TAB_ATTR, path);
+    $parent.append(element);
+    $(element).html($(OcbetreeConstants.GITHUB.BLOB_CONTAINER).html());
     this.assign({
       cache: Object.assign(this.context.cache, {
-        [path]: true,
+        [path]: {
+          title: document.title,
+        },
       }),
     });
   }
 
   isCached(path) {
     return this.context.cache[path];
+  }
+
+  restoreFromCache(path) {
+    path = OcbetreeUtils.getPathWithoutAnchor(path);
+
+    if (this.context.cache[path]) {
+      const query = `[${OcbetreeConstants.GITHUB.TAB_ATTR}="${path}"]`;
+
+      $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr("style", "display:none");
+      $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`).attr("style", "display:none");
+      $(query).removeAttr("style");
+      history.pushState({}, null, path);
+      document.title = this.context.cache[path].title;
+
+      return true;
+    }
+
+    return false;
   }
 
   assign(context = {}) {

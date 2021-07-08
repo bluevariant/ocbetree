@@ -70,6 +70,8 @@ class PjaxAdapter extends Adapter {
     // Do nothing if file is already selected.
     if (location.pathname === path) return;
 
+    if (Ocbetree.invoke().restoreFromCache(path)) return;
+
     // If we're on the same page and just navigating to a different anchor
     // Don't bother fetching the page with pjax
     const pathWithoutAnchor = path.replace(/#.*$/, "");

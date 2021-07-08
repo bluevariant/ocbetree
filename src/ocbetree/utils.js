@@ -5,6 +5,8 @@ OcbetreeUtils.getPathWithoutAnchor = function (path) {
 };
 
 OcbetreeUtils.isBlob = function (repo, path) {
+  if (!repo) return false;
+
   return path.startsWith(`/${repo.username}/${repo.reponame}/blob/`);
 };
 

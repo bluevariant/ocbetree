@@ -4,7 +4,7 @@
 // File e.g. https://github.com/jquery/jquery/blob/master/.editorconfig.
 // Therefore, the below selector uses many path but only points to the same <main> element
 const GH_PJAX_CONTAINER_SEL =
-  '#js-repo-pjax-container, div[itemtype="http://schema.org/SoftwareSourceCode"] main, [data-pjax-container]';
+  '#js-repo-pjax-container, div[itemtype="http://schema.org/SoftwareSourceCode"] main:first-child, [data-pjax-container]';
 
 const GH_CONTAINERS = ".container, .container-lg, .container-responsive";
 const GH_MAX_HUGE_REPOS_SIZE = 50;
