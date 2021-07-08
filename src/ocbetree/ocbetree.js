@@ -98,8 +98,6 @@ class Ocbetree {
       history.pushState({}, null, path);
       window.scrollTo(cacheData.scroll.x, cacheData.scroll.y);
 
-      console.log(cacheData.scroll.x, cacheData.scroll.y);
-
       document.title = cacheData.title;
 
       return true;
