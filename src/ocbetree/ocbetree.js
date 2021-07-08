@@ -104,6 +104,8 @@ class Ocbetree {
   calcScrollTo(path) {
     path = OcbetreeUtils.getPathWithoutAnchor(path);
 
+    if (!OcbetreeUtils.isBlob(this.context.repository, path)) return 0;
+
     const defaultScroll = this.defaultScroll();
     const cacheData = this.context.cache[path];
     let pathScroll = 0;
