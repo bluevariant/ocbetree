@@ -49,7 +49,6 @@ class Ocbetree {
     const element = document.createElement("div");
 
     $contentElements.attr("style", "display:none");
-    // element.setAttribute("style", "display:none");
     element.setAttribute(OcbetreeConstants.GITHUB.TAB_ATTR, path);
     $parent.append(element);
     $(element).html($(OcbetreeConstants.GITHUB.BLOB_CONTAINER).html());
