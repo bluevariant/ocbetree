@@ -15,6 +15,7 @@ class Ocbetree {
         { timeout: 1000 }
       );
     });
+    $(window).on("scroll", (e) => this.handleScroll(e));
   }
 
   handleLocationChanged(href) {
@@ -58,9 +59,26 @@ class Ocbetree {
       cache: Object.assign(this.context.cache, {
         [path]: {
           title: document.title,
+          scroll: {
+            x: 0,
+            y: 0,
+          },
         },
       }),
     });
+  }
+
+  handleScroll() {
+    const path = OcbetreeUtils.getPathWithoutAnchor();
+
+    if (this.context.cache[path]) {
+      const $window = $(window);
+      const x = $window.scrollLeft();
+      const y = $window.scrollTop();
+
+      this.context.cache[path].scroll.x = x;
+      this.context.cache[path].scroll.y = y;
+    }
   }
 
   isCached(path) {
@@ -69,15 +87,20 @@ class Ocbetree {
 
   restoreFromCache(path) {
     path = OcbetreeUtils.getPathWithoutAnchor(path);
+    const cacheData = this.context.cache[path];
 
-    if (this.context.cache[path]) {
+    if (cacheData) {
       const query = `[${OcbetreeConstants.GITHUB.TAB_ATTR}="${path}"]`;
 
       $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr("style", "display:none");
       $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}]`).attr("style", "display:none");
       $(query).removeAttr("style");
       history.pushState({}, null, path);
-      document.title = this.context.cache[path].title;
+      window.scrollTo(cacheData.scroll.x, cacheData.scroll.y);
+
+      console.log(cacheData.scroll.x, cacheData.scroll.y);
+
+      document.title = cacheData.title;
 
       return true;
     }
