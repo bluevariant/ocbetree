@@ -1,3 +1,4 @@
+// @flow
 let ocbetreeInstance;
 
 class Ocbetree {
@@ -5,10 +6,12 @@ class Ocbetree {
     this.context = {
       repository: undefined,
     };
-    onLocationChanged((href, oldHref) => this.onLocationChanged(href, oldHref));
+    onLocationChanged((href, oldHref) => {
+      this.handleLocationChanged(href, oldHref);
+    });
   }
 
-  onLocationChanged(href) {
+  handleLocationChanged(href) {
     const url = new URL(href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
@@ -19,6 +22,13 @@ class Ocbetree {
         path
       );
     }
+  }
+
+  handlePjaxEvent(event, octotreeEventName, pjaxEventName) {
+    const url = new URL(location.href);
+    const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
+
+    console.log(pjaxEventName, path);
   }
 
   assign(context = {}) {
@@ -45,7 +55,7 @@ function onLocationChanged(callback) {
     function () {
       let oldHref = null;
       let bodyDOM = document.querySelector("body");
-      const observer = new MutationObserver(function (mutations) {
+      const observer = new MutationObserver(function () {
         if (oldHref !== document.location.href) {
           if (typeof callback === "function") {
             callback(document.location.href, oldHref);

@@ -1,3 +1,5 @@
+// @flow
+
 class PjaxAdapter extends Adapter {
   constructor(pjaxContainerSel) {
     super(["jquery.pjax.js"]);
@@ -92,6 +94,8 @@ class PjaxAdapter extends Adapter {
    * @api private
    */
   _handlePjaxEvent(event, octotreeEventName, pjaxEventName) {
+    Ocbetree.invoke().handlePjaxEvent(event, octotreeEventName, pjaxEventName);
+
     // Avoid re-entrance, which would blow the callstack. Because dispatchEvent() is synchronous, it's possible
     // for badly implemented handler from another extension to prevent legit event handling if users navigate
     // among files too quickly. Hopefully none is that bad. We'll deal with it IFF it happens.
