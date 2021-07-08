@@ -98,7 +98,7 @@ class Ocbetree {
   fixFooter() {
     const defaultScroll = this.defaultScroll();
 
-    $("body").css("min-height", `calc(100vh + ${defaultScroll + 2}px)`);
+    $("body").css("min-height", `calc(100vh + ${defaultScroll}px)`);
   }
 
   calcScrollTo(path) {
