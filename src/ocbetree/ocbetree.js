@@ -32,7 +32,9 @@ class Ocbetree {
     if ($("." + containerClass).length === 0) {
       const $tabs = $(`<div class="${containerClass}"></div>`);
 
-      $tabs.prepend('<div class="welcome">Ocbetree <span>🌼</span></div>');
+      $tabs.prepend(
+        '<div class="welcome">Ocbetree <span>🌼</span> with love!</div>'
+      );
       $container.prepend($tabs);
     }
   }
@@ -139,7 +141,7 @@ class Ocbetree {
   defaultScroll() {
     const github = OcbetreeConstants.GITHUB;
 
-    return github.INITIAL_SCROLL_TOP + github.TABS_HEIGHT;
+    return github.INITIAL_SCROLL_TOP;
   }
 
   isCached(path) {
