@@ -5,9 +5,12 @@ class Ocbetree {
   constructor() {
     this.context = {
       repository: undefined,
+      cache: {},
     };
     onLocationChanged((href, oldHref) => {
-      this.handleLocationChanged(href, oldHref);
+      requestIdleCallback(() => {
+        this.handleLocationChanged(href, oldHref);
+      });
     });
   }
 
@@ -15,20 +18,45 @@ class Ocbetree {
     const url = new URL(href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
-    if (OcbetreeUtils.isBlob(this.context.repository, path)) {
-      OcbetreeUtils.removeAllAttrs(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
-      $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr(
-        OcbetreeConstants.GITHUB.TAB_ATTR,
-        path
-      );
-    }
+    this.handleCache(path);
   }
 
   handlePjaxEvent(event, octotreeEventName, pjaxEventName) {
     const url = new URL(location.href);
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
-    console.log(pjaxEventName, path);
+    if (["pjax:end"].includes(pjaxEventName)) {
+      this.handleCache(path);
+    }
+  }
+
+  handleCache(path) {
+    if (this.context.cache[path]) return;
+
+    if (!OcbetreeUtils.isBlob(this.context.repository, path)) {
+      return;
+    }
+
+    const cloneContainer = OcbetreeUtils.cloneElement(
+      OcbetreeConstants.GITHUB.BLOB_CONTAINER
+    );
+    const $parent = $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).parent();
+
+    OcbetreeUtils.removeAllAttrs(OcbetreeConstants.GITHUB.BLOB_CONTAINER);
+    $(OcbetreeConstants.GITHUB.BLOB_CONTAINER).attr(
+      OcbetreeConstants.GITHUB.TAB_ATTR,
+      path
+    );
+    $parent.prepend(cloneContainer);
+    this.assign({
+      cache: Object.assign(this.context.cache, {
+        [path]: true,
+      }),
+    });
+  }
+
+  isCached(path) {
+    return this.context.cache[path];
   }
 
   assign(context = {}) {

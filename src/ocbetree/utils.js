@@ -18,3 +18,18 @@ OcbetreeUtils.removeAllAttrs = function (element) {
     console.error(e);
   }
 };
+
+OcbetreeUtils.cloneElement = function (element) {
+  try {
+    const $element = $(element);
+    const shadow = document.createElement($element.prop("tagName"));
+
+    _.forEach($element[0].attributes, (v) => {
+      shadow.setAttribute(v.name, v.value);
+    });
+
+    return shadow;
+  } catch (e) {
+    console.error(e);
+  }
+};
