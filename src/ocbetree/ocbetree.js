@@ -57,19 +57,20 @@ class Ocbetree {
     }
 
     const $tabs = $1.find(".tabs");
-    const items = [];
+    const tabs = _.range(0, 20).map((v) => ({
+      name: "Tab " + v,
+    }));
+    const maxWidth = 100 / tabs.length;
+    const _renderTab = (tab) => {
+      return `
+        <div class="item" style="max-width: ${maxWidth}%" title="${tab.name}">
+          <div class="content">${tab.name}</div>
+          <div class="actions"><span>✕</span></div>
+        </div>
+      `;
+    };
 
-    items.push(`<div class="item active">
-      <div class="content">Hello</div>
-    </div>`);
-
-    for (let i = 0; i < 1; i++) {
-      items.push(`<div class="item">
-        <div class="content">Hello</div>
-      </div>`);
-    }
-
-    // $tabs.html(items.join(""));
+    $tabs.html(tabs.map(_renderTab).join(""));
   }
 
   isWorkingOnRepo() {
