@@ -74,6 +74,12 @@ class Ocbetree {
     };
 
     $tabs.html(tabs.map(_renderTab).join(""));
+    $tabs.sortable({
+      axis: "x",
+      items: ".item",
+      distance: 6,
+      scroll: false,
+    });
   }
 
   isWorkingOnRepo() {
