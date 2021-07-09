@@ -35,3 +35,19 @@ OcbetreeUtils.cloneElement = function (element) {
     console.error(e);
   }
 };
+
+OcbetreeUtils.selectPath = function selectPath($jstree, paths, index = 0) {
+  if (!$jstree || !$jstree.get_node) return;
+
+  const nodeId = NODE_PREFIX + paths[index];
+
+  if ($jstree.get_node(nodeId)) {
+    $jstree.deselect_all();
+    $jstree.select_node(nodeId);
+    $jstree.open_node(nodeId, () => {
+      if (++index < paths.length) {
+        selectPath(paths, index);
+      }
+    });
+  }
+};

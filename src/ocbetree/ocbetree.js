@@ -18,6 +18,11 @@ class Ocbetree {
         this.context.isFirstLoad = false;
       });
       requestIdleCallback(() => this.makingTabs(), { timeout: 1000 });
+
+      const url = new URL(href);
+      const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
+
+      OcbetreeUtils.selectPath(this.tree.$jstree, [path]);
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
   }
