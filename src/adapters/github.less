@@ -856,17 +856,18 @@
         top: 2px;
         right: 0;
         bottom: 1px;
-        background: inherit;
         display: flex;
         align-items: center;
-        box-shadow: -6px 0 6px 1px var(--color-bg-canvas);
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        background-color: var(--color-bg-canvas);
 
         span {
           padding: 0.25rem;
           display: inline-block;
           border-radius: 50%;
           font-size: 0.75rem;
-          opacity: 0.3;
+          box-shadow: -6px 0 6px 1px var(--color-bg-canvas);
 
           &:hover {
             opacity: 1;
@@ -885,8 +886,12 @@
         }
 
         .actions {
-          bottom: 2px;
-          box-shadow: -6px 0 6px 1px var(--color-bg-tertiary);
+          //bottom: 3px;
+          border-bottom: 2px solid #f9826c;
+
+          span {
+            box-shadow: -6px 0 6px 1px var(--color-bg-tertiary);
+          }
         }
       }
 
@@ -897,7 +902,9 @@
         }
 
         .actions {
-          box-shadow: -6px 0 6px 1px var(--color-bg-tertiary);
+          span {
+            box-shadow: -6px 0 6px 1px var(--color-bg-tertiary);
+          }
         }
       }
     }

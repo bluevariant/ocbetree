@@ -57,13 +57,16 @@ class Ocbetree {
     }
 
     const $tabs = $1.find(".tabs");
-    const tabs = _.range(0, 20).map((v) => ({
+    const tabs = _.range(0, 5).map((v) => ({
       name: "Tab " + v,
     }));
     const maxWidth = 100 / tabs.length;
-    const _renderTab = (tab) => {
+    const _renderTab = (tab, i) => {
+      const isActive = i === 2;
+      const itemClass = isActive ? "item active" : "item";
+
       return `
-        <div class="item" style="max-width: ${maxWidth}%" title="${tab.name}">
+        <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}">
           <div class="content">${tab.name}</div>
           <div class="actions"><span>✕</span></div>
         </div>
