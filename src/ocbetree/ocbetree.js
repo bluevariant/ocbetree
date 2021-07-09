@@ -80,6 +80,21 @@ class Ocbetree {
       distance: 6,
       scroll: false,
     });
+    this.fixMdHeader();
+  }
+
+  fixMdHeader() {
+    const $mdHeader = $("div[data-original-top]");
+
+    $mdHeader.attr(
+      "style",
+      ($mdHeader.attr("style") || "").replace(/top:(.*?)!important/g, "")
+    );
+    $mdHeader.attr(
+      "class",
+      ($mdHeader.attr("class") || "").replace("top-0", "")
+    );
+    $mdHeader.css("top", OcbetreeConstants.GITHUB.TABS_HEIGHT + "px");
   }
 
   isWorkingOnRepo() {
