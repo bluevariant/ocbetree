@@ -57,7 +57,7 @@ class Ocbetree {
     }
 
     const $tabs = $1.find(".tabs");
-    const tabs = _.range(0, 5).map((v) => ({
+    const tabs = _.range(0, 6).map((v) => ({
       name: "Tab " + v,
     }));
     const maxWidth = 100 / tabs.length;
