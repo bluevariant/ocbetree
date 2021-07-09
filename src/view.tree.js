@@ -20,6 +20,7 @@ class TreeView {
         },
         plugins: ["wholerow", "search", "truncate"],
       });
+    Ocbetree.invoke().tree = this;
   }
 
   get $jstree() {

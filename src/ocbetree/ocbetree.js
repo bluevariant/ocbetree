@@ -3,6 +3,7 @@ let ocbetreeInstance;
 
 class Ocbetree {
   constructor() {
+    this.tree = undefined;
     this.context = {
       repository: undefined,
       cache: {},
