@@ -40,9 +40,10 @@ class Ocbetree {
     if ($1.length === 0) {
       const $tabs = $(`<div class="${containerClass}"></div>`);
 
-      $tabs.prepend(
+      $tabs.append(
         '<div class="welcome">Ocbetree <span>🌼</span> with love!</div>'
       );
+      $tabs.append('<div class="tabs"></div>');
       $container.prepend($tabs);
 
       const $window = $(window);
@@ -54,6 +55,21 @@ class Ocbetree {
 
       $1 = $tabs;
     }
+
+    const $tabs = $1.find(".tabs");
+    const items = [];
+
+    items.push(`<div class="item active">
+      <div class="content">Hello</div>
+    </div>`);
+
+    for (let i = 0; i < 1; i++) {
+      items.push(`<div class="item">
+        <div class="content">Hello</div>
+      </div>`);
+    }
+
+    // $tabs.html(items.join(""));
   }
 
   isWorkingOnRepo() {

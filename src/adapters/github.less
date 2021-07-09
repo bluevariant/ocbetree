@@ -792,7 +792,7 @@
 //}
 
 .ocbetree-tabs {
-  height: 50px;
+  height: 36px;
   box-shadow: inset 0 -1px 0 var(--color-border-secondary);
   position: sticky;
   top: 0;
@@ -808,13 +808,59 @@
     top: 0;
     right: 0;
     padding: 0 2.5rem;
-    opacity: 0.25;
+    opacity: 0.3;
     font-style: italic;
+    z-index: 1;
 
     span {
       font-style: normal;
       display: inline-block;
       padding: 0 0.25rem;
+    }
+  }
+
+  .tabs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: table;
+    table-layout: fixed;
+    overflow: hidden;
+    padding: 0 1px;
+
+    .item {
+      display: table-cell;
+      height: 100%;
+      position: relative;
+      vertical-align: bottom;
+      box-shadow: inset 0 -1px 0 var(--color-border-secondary);
+      background-color: var(--color-bg-canvas);
+      padding: 2px 1px 1px;
+      cursor: pointer;
+
+      .content {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 0.75rem;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+      }
+
+      &.active {
+        .content {
+          background-color: var(--color-bg-tertiary);
+        }
+      }
+
+      &:hover {
+        .content {
+          background-color: var(--color-bg-tertiary);
+        }
+      }
     }
   }
 }
