@@ -169,7 +169,7 @@ class Ocbetree {
         if (self.context.tabHistory[0]) {
           self.adapter.selectFile(self.context.tabHistory[0]);
         } else {
-          if (self.context.tabs.length === 1) {
+          if (self.context.tabs.length <= 1) {
             self.makingTabs();
           } else {
             self.adapter.selectFile(
@@ -184,8 +184,6 @@ class Ocbetree {
 
     $closeButtons.off("click");
     $closeButtons.on("click", function (e) {
-      console.log("click");
-
       e.stopPropagation();
 
       const dataPath = $(this).attr("data-path");
