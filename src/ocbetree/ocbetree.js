@@ -63,7 +63,9 @@ class Ocbetree {
 
     this.cleanTabHistory();
 
-    this.context.tabHistory.unshift(path);
+    if (this.context.tabHistory[0] !== path) {
+      this.context.tabHistory.unshift(path);
+    }
 
     if (this.context.tabHistory.length > 99) {
       this.context.tabHistory.pop();
@@ -75,7 +77,7 @@ class Ocbetree {
       const path = this.context.tabHistory[i];
       const index = _.findIndex(this.context.tabs, (v) => v.path === path);
 
-      if (index === -1) this.context.tabHistory.splice(i, 0);
+      if (index === -1) this.context.tabHistory.splice(i, 1);
     }
   }
 
@@ -156,14 +158,33 @@ class Ocbetree {
     const $items = $tabs.find(".item");
     const $closeButtons = $tabs.find('[data-action="remove"]');
     const _remove = (path, isActive) => {
-      console.log("remove:", path, isActive);
+      const index = _.findIndex(self.context.tabs, (v) => v.path === path);
+
+      if (index === -1) return;
+
+      self.context.tabs.splice(index, 1);
+      self.cleanTabHistory();
+
+      if (isActive) {
+        if (self.context.tabHistory[0]) {
+          self.adapter.selectFile(self.context.tabHistory[0]);
+        } else {
+          self.makingTabs();
+        }
+      } else {
+        self.makingTabs();
+      }
     };
 
     $closeButtons.off("click");
     $closeButtons.on("click", function (e) {
+      console.log("click");
+
       e.stopPropagation();
 
-      _remove($(this).attr("data-path"), $(this).is(".active"));
+      const dataPath = $(this).attr("data-path");
+
+      _remove(dataPath, dataPath === path);
     });
     $items.off("click");
     $items.on("click", function () {
@@ -187,7 +208,9 @@ class Ocbetree {
     $items.off("mouseup");
     $items.on("mouseup", function (e) {
       if (e.which === 2) {
-        _remove($(this).attr("data-path"), $(this).is(".active"));
+        const dataPath = $(this).attr("data-path");
+
+        _remove(dataPath, dataPath === path);
       }
     });
     this.fixMdHeader();
