@@ -58,7 +58,7 @@ OcbetreeUtils.selectPath = function selectPath($jstree, paths, index = 0) {
         selectPath(paths, index);
       }
     });
-  } else {
+  } else if (paths.length === 1) {
     $jstree.deselect_all();
   }
 };
