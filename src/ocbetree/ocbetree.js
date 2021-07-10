@@ -169,7 +169,13 @@ class Ocbetree {
         if (self.context.tabHistory[0]) {
           self.adapter.selectFile(self.context.tabHistory[0]);
         } else {
-          self.makingTabs();
+          if (self.context.tabs.length === 1) {
+            self.makingTabs();
+          } else {
+            self.adapter.selectFile(
+              self.context.tabs[Math.max(index - 1, 0)].path
+            );
+          }
         }
       } else {
         self.makingTabs();
