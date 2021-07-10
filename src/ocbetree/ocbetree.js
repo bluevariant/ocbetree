@@ -117,6 +117,16 @@ class Ocbetree {
       items: ".item",
       distance: 6,
       scroll: false,
+      stop: () => {
+        const paths = {};
+
+        $tabs.find(".item").each(function (i) {
+          paths[$(this).attr("data-path")] = i;
+        });
+
+        this.context.tabs.sort((a, b) => paths[a.path] - paths[b.path]);
+        this.makingTabs(path);
+      },
     });
     this.fixMdHeader();
   }
