@@ -121,6 +121,22 @@ class Ocbetree {
     this.fixMdHeader();
   }
 
+  cleanCache() {
+    const exists = {};
+
+    _.forEach(this.context.tabs, (v) => {
+      exists[v.path] = true;
+    });
+
+    _.forEach(this.context.cache, (v, k) => {
+      if (!exists[k]) {
+        $(`[${OcbetreeConstants.GITHUB.TAB_ATTR}="${k}"]`).remove();
+
+        delete this.context.cache[k];
+      }
+    });
+  }
+
   fixMdHeader() {
     if (!this._fixMdHeader) {
       this._fixMdHeader = _.throttle(() => {
@@ -165,6 +181,7 @@ class Ocbetree {
 
     if (["pjax:end"].includes(pjaxEventName)) {
       this.handleCache(path);
+      this.cleanCache();
     } else if (["pjax:start"].includes(pjaxEventName)) {
       this.fixFooter();
     }
