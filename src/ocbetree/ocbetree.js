@@ -8,6 +8,7 @@ class Ocbetree {
       repository: undefined,
       cache: {},
       isFirstLoad: true,
+      tabs: [],
     };
     onLocationChanged((href, oldHref) => {
       requestIdleCallback(() => {
@@ -23,6 +24,32 @@ class Ocbetree {
       ]);
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
+  }
+
+  addOrUpdateTab(path, temp) {
+    path = OcbetreeUtils.getPathWithoutAnchor(path);
+
+    let tabData;
+    const index = _.findIndex(this.context.tabs, (v) => v.path === path);
+
+    if (index === -1) {
+      let tempIndex = _.findIndex(this.context.tabs, (v) => v.temp === true);
+      const data = {
+        name: path.split("/").pop(),
+        path: path,
+        temp: !!temp,
+      };
+
+      if (tempIndex === -1) {
+        this.context.tabs.push(data);
+      } else {
+        this.context.tabs[tempIndex] = data;
+      }
+    } else {
+      tabData = this.context.tabs[index];
+      tabData.temp = !!temp;
+      this.context.tabs[index] = tabData;
+    }
   }
 
   makingTabs(path) {
@@ -61,12 +88,24 @@ class Ocbetree {
     }
 
     const $tabs = $1.find(".tabs");
-    const tabs = _.range(0, 6).map((v) => ({
-      name: "Tab " + v,
-    }));
+    const tabs = [];
+
+    if (!this.context.cache[path]) {
+      let tempIndex = _.findIndex(tabs, (v) => {});
+    }
+
+    _.forEach(this.context.cache, (v, k) => {
+      const name = k.split("/").pop();
+
+      tabs[v.index] = {
+        name,
+        path: k,
+      };
+    });
+
     const maxWidth = 100 / tabs.length;
-    const _renderTab = (tab, i) => {
-      const isActive = i === 2;
+    const _renderTab = (tab) => {
+      const isActive = tab.path === path;
       const itemClass = isActive ? "item active" : "item";
 
       return `
@@ -159,7 +198,15 @@ class Ocbetree {
     $parent.append(element);
     $(element).html($mainContent.html());
     $mainContent.attr("style", "display:none");
-    this.makingTabs(path);
+
+    let tabIndex = this.context.cache[path]
+      ? this.context.cache[path].index
+      : -1;
+
+    if (!(tabIndex >= 0)) {
+      tabIndex = Object.keys(this.context.cache).length;
+    }
+
     this.assign({
       cache: Object.assign(this.context.cache, {
         [path]: {
@@ -168,9 +215,11 @@ class Ocbetree {
             x: $window.scrollLeft(),
             y: $window.scrollTop(),
           },
+          index: tabIndex,
         },
       }),
     });
+    this.makingTabs(path);
 
     if (this.context.isFirstLoad) {
       this.fixFooter();
