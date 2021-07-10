@@ -88,17 +88,25 @@ class Ocbetree {
   }
 
   fixMdHeader() {
-    const $mdHeader = $("div[data-original-top]");
+    if (!this._fixMdHeader) {
+      this._fixMdHeader = _.throttle(() => {
+        const $mdHeader = $("div[data-original-top]");
 
-    $mdHeader.attr(
-      "style",
-      ($mdHeader.attr("style") || "").replace(/top:(.*?)!important/g, "")
-    );
-    $mdHeader.attr(
-      "class",
-      ($mdHeader.attr("class") || "").replace("top-0", "")
-    );
-    $mdHeader.css("top", OcbetreeConstants.GITHUB.TABS_HEIGHT + "px");
+        if ($mdHeader.length > 0) {
+          $mdHeader.attr(
+            "style",
+            ($mdHeader.attr("style") || "").replace(/top:(.*?)!important/g, "")
+          );
+          $mdHeader.attr(
+            "class",
+            ($mdHeader.attr("class") || "").replace("top-0", "")
+          );
+          $mdHeader.css("top", OcbetreeConstants.GITHUB.TABS_HEIGHT + "px");
+        }
+      }, 250);
+    }
+
+    this._fixMdHeader();
   }
 
   isWorkingOnRepo() {
@@ -185,6 +193,8 @@ class Ocbetree {
       this.context.cache[path].scroll.x = x;
       this.context.cache[path].scroll.y = y;
     }
+
+    this.fixMdHeader();
   }
 
   fixFooter() {
