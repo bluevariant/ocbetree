@@ -29,21 +29,34 @@ class Ocbetree {
   }
 
   async init() {
+    if (!this.context.repository) return;
+
+    const repo = this.context.repository;
+    const prefix = [repo.username, repo.reponame, repo.branch].join("/");
+
     this.context.tabs = JSON.parse(
-      (await extStore.get(OcbetreeConstants.STORE.TABS)) || "[]"
+      (await extStore.get([OcbetreeConstants.STORE.TABS, prefix].join("/"))) ||
+        "[]"
     );
     this.context.tabHistory = JSON.parse(
-      (await extStore.get(OcbetreeConstants.STORE.TABS_HISTORY)) || "[]"
+      (await extStore.get(
+        [OcbetreeConstants.STORE.TABS_HISTORY, prefix].join("/")
+      )) || "[]"
     );
   }
 
   async save() {
+    if (!this.context.repository) return;
+
+    const repo = this.context.repository;
+    const prefix = [repo.username, repo.reponame, repo.branch].join("/");
+
     await extStore.set(
-      OcbetreeConstants.STORE.TABS,
+      [OcbetreeConstants.STORE.TABS, prefix].join("/"),
       JSON.stringify(this.context.tabs)
     );
     await extStore.set(
-      OcbetreeConstants.STORE.TABS_HISTORY,
+      [OcbetreeConstants.STORE.TABS_HISTORY, prefix].join("/"),
       JSON.stringify(this.context.tabHistory)
     );
   }

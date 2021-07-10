@@ -2,7 +2,7 @@ $(document).ready(() => {
   octotree.load(loadExtension);
 
   async function loadExtension(activationOpts = {}) {
-    await Ocbetree.invoke().init();
+    Ocbetree.invoke();
 
     const $html = $("html");
     const $document = $(document);
@@ -144,6 +144,7 @@ $(document).ready(() => {
           }
         } else if (repo) {
           Ocbetree.invoke().assign({ repository: repo });
+          await Ocbetree.invoke().init();
 
           if ((await extStore.get(STORE.PINNED)) && !isSidebarVisible()) {
             // If we're in pin mode but sidebar doesn't show yet, show it.
