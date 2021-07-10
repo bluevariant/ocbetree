@@ -222,6 +222,7 @@ class Ocbetree {
       }
     });
     this.fixMdHeader();
+    this.save().catch(console.error);
   }
 
   cleanCache() {
