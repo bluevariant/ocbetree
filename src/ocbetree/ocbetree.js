@@ -91,30 +91,21 @@ class Ocbetree {
       $1 = $tabs;
     }
 
+    if (OcbetreeUtils.isBlob(this.context.repository, path)) {
+      this.addOrUpdateTab(path, true);
+    }
+
     const $tabs = $1.find(".tabs");
     const tabs = this.context.tabs;
-
-    // if (!this.context.cache[path]) {
-    //   let tempIndex = _.findIndex(tabs, (v) => {});
-    // }
-    //
-    // _.forEach(this.context.cache, (v, k) => {
-    //   const name = k.split("/").pop();
-    //
-    //   tabs[v.index] = {
-    //     name,
-    //     path: k,
-    //   };
-    // });
-
     const maxWidth = 100 / tabs.length;
     const _renderTab = (tab) => {
       const isActive = tab.path === path;
       const itemClass = isActive ? "item active" : "item";
+      const contentClass = tab.temp ? "content temp" : "content";
 
       return `
-        <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}">
-          <div class="content">${tab.name}</div>
+        <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}" data-path="${tab.path}">
+          <div class="${contentClass}">${tab.name}</div>
           <div class="actions"><span>✕</span></div>
         </div>
       `;
