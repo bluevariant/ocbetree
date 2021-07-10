@@ -356,8 +356,6 @@ class Ocbetree {
     if (this.context.isFirstLoad) {
       this.fixFooter();
 
-      console.log(this.calcScrollTo(path));
-
       window.scrollTo({
         top: this.calcScrollTo(path),
         left: 0,
