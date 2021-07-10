@@ -404,7 +404,9 @@ class Ocbetree {
     const defaultScroll = this.defaultScroll();
     const tabIndex = _.findIndex(this.context.tabs, (v) => v.path === path);
     const tab = this.context.tabs[tabIndex];
-    const pathScroll = Object.keys(tab).includes("scroll") ? tab.scroll.y : 0;
+    const pathScroll = Object.keys(tab || {}).includes("scroll")
+      ? tab.scroll.y
+      : 0;
 
     return Math.max(pathScroll, defaultScroll);
   }
