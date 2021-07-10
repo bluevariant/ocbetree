@@ -10,3 +10,8 @@ OcbetreeConstants.GITHUB = {
   FOOTER: ".footer",
   MAIN: ".application-main",
 };
+
+OcbetreeConstants.STORE = {
+  TABS: "ocbetree:tabs",
+  TABS_HISTORY: "ocbetree:tabs-history",
+};

@@ -2,7 +2,7 @@ $(document).ready(() => {
   octotree.load(loadExtension);
 
   async function loadExtension(activationOpts = {}) {
-    Ocbetree.invoke();
+    await Ocbetree.invoke().init();
 
     const $html = $("html");
     const $document = $(document);

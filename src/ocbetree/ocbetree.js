@@ -28,9 +28,25 @@ class Ocbetree {
     $(window).on("scroll", (e) => this.handleScroll(e));
   }
 
-  async init() {}
+  async init() {
+    this.context.tabs = JSON.parse(
+      (await extStore.get(OcbetreeConstants.STORE.TABS)) || "[]"
+    );
+    this.context.tabHistory = JSON.parse(
+      (await extStore.get(OcbetreeConstants.STORE.TABS_HISTORY)) || "[]"
+    );
+  }
 
-  async save() {}
+  async save() {
+    await extStore.set(
+      OcbetreeConstants.STORE.TABS,
+      JSON.stringify(this.context.tabs)
+    );
+    await extStore.set(
+      OcbetreeConstants.STORE.TABS_HISTORY,
+      JSON.stringify(this.context.tabHistory)
+    );
+  }
 
   setAdapter(adapter) {
     this.adapter = adapter;
@@ -339,6 +355,9 @@ class Ocbetree {
 
     if (this.context.isFirstLoad) {
       this.fixFooter();
+
+      console.log(this.calcScrollTo(path));
+
       window.scrollTo({
         top: this.calcScrollTo(path),
         left: 0,
@@ -362,8 +381,10 @@ class Ocbetree {
             x,
             y,
           };
+
+          this.save().catch(console.error);
         }
-      }, 33);
+      }, 250);
     }
 
     this._handleScroll();
