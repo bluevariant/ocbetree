@@ -28,6 +28,10 @@ class Ocbetree {
     $(window).on("scroll", (e) => this.handleScroll(e));
   }
 
+  async init() {}
+
+  async save() {}
+
   setAdapter(adapter) {
     this.adapter = adapter;
   }
@@ -343,17 +347,25 @@ class Ocbetree {
   }
 
   handleScroll() {
-    const path = OcbetreeUtils.getPathWithoutAnchor();
+    if (!this._handleScroll) {
+      this._handleScroll = _.debounce(() => {
+        const path = OcbetreeUtils.getPathWithoutAnchor();
+        const index = _.findIndex(this.context.tabs, (v) => v.path === path);
 
-    if (this.context.cache[path]) {
-      const $window = $(window);
-      const x = $window.scrollLeft();
-      const y = $window.scrollTop();
+        if (index !== -1) {
+          const $window = $(window);
+          const x = $window.scrollLeft();
+          const y = $window.scrollTop();
 
-      this.context.cache[path].scroll.x = x;
-      this.context.cache[path].scroll.y = y;
+          this.context.tabs[index].scroll = {
+            x,
+            y,
+          };
+        }
+      }, 33);
     }
 
+    this._handleScroll();
     this.fixMdHeader();
   }
 
@@ -369,11 +381,14 @@ class Ocbetree {
     if (!OcbetreeUtils.isBlob(this.context.repository, path)) return 0;
 
     const defaultScroll = this.defaultScroll();
-    const cacheData = this.context.cache[path];
+    const tabIndex = _.findIndex(this.context.tabs, (v) => v.path === path);
     let pathScroll = 0;
+    const tab = JSON.parse(JSON.stringify(this.context.tabs[tabIndex]));
 
-    if (cacheData) {
-      pathScroll = cacheData.scroll.y;
+    console.log(tab, tabIndex !== 1 && typeof tab.scroll !== "undefined");
+
+    if (tabIndex !== 1 && typeof tab.scroll !== "undefined") {
+      pathScroll = tab.scroll.y;
     }
 
     return Math.max(pathScroll, defaultScroll);
@@ -409,7 +424,7 @@ class Ocbetree {
       $query.removeAttr("style");
       history.pushState({}, null, path);
       this.fixFooter();
-      window.scrollTo(cacheData.scroll.x, this.calcScrollTo(path));
+      window.scrollTo(0, this.calcScrollTo(path));
       this.makingTabs(path);
 
       document.title = cacheData.title;
