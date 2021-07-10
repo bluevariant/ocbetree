@@ -302,6 +302,11 @@ class Ocbetree {
     if (["pjax:end"].includes(pjaxEventName)) {
       this.handleCache(path);
       this.cleanCache();
+      window.scrollTo({
+        top: this.calcScrollTo(path),
+        left: 0,
+        behavior: "smooth",
+      });
     } else if (["pjax:start"].includes(pjaxEventName)) {
       this.fixFooter();
     }
