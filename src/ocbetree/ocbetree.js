@@ -43,6 +43,7 @@ class Ocbetree {
         [OcbetreeConstants.STORE.TABS_HISTORY, prefix].join("/")
       )) || "[]"
     );
+    this.makingTabs();
   }
 
   async save() {
