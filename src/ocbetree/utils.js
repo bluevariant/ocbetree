@@ -19,6 +19,18 @@ OcbetreeUtils.isBlob = function (repo, path) {
   return path.startsWith(`/${repo.username}/${repo.reponame}/blob/`);
 };
 
+OcbetreeUtils.isTree = function (repo, path) {
+  if (!repo) return false;
+
+  return path.startsWith(`/${repo.username}/${repo.reponame}/tree/`);
+};
+
+OcbetreeUtils.isHome = function (repo, path) {
+  if (!repo) return false;
+
+  return path.endsWith(`/${repo.username}/${repo.reponame}`);
+};
+
 OcbetreeUtils.removeAllAttrs = function (element) {
   try {
     const $element = $(element);

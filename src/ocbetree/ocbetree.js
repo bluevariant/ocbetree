@@ -289,7 +289,9 @@ class Ocbetree {
       }, 250);
     }
 
-    this._fixMdHeader();
+    if (this.isWorkingOnRepo()) {
+      this._fixMdHeader();
+    }
   }
 
   isWorkingOnRepo() {
@@ -298,7 +300,12 @@ class Ocbetree {
     const path = OcbetreeUtils.getPathWithoutAnchor();
     const repo = this.context.repository;
 
-    return path.startsWith(`/${repo.username}/${repo.reponame}`);
+    // return path.startsWith(`/${repo.username}/${repo.reponame}`);
+    return (
+      OcbetreeUtils.isBlob(repo, path) ||
+      OcbetreeUtils.isTree(repo, path) ||
+      OcbetreeUtils.isHome(repo, path)
+    );
   }
 
   handleLocationChanged(href) {
