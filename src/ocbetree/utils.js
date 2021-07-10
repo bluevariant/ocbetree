@@ -1,5 +1,14 @@
 class OcbetreeUtils {}
 
+OcbetreeUtils.getCurrentPath = function () {
+  // Convert /username/reponame/object_type/branch/path to path
+  const path = decodeURIComponent(location.pathname);
+  const match = path.match(/(?:[^\/]+\/){4}(.*)/);
+  if (!match) return;
+
+  return match[1];
+};
+
 OcbetreeUtils.getPathWithoutAnchor = function (path) {
   return (path || location.pathname).replace(/#.*$/, "");
 };
