@@ -13,6 +13,7 @@ class PjaxAdapter extends Adapter {
         this._handlePjaxEvent(e, EVENT.REQ_END, "pjax:end")
       )
       .on("pjax:timeout", (e) => e.preventDefault());
+    Ocbetree.invoke().setAdapter(this);
   }
 
   // @override

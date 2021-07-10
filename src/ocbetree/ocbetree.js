@@ -4,6 +4,7 @@ let ocbetreeInstance;
 class Ocbetree {
   constructor() {
     this.tree = undefined;
+    this.adapter = undefined;
     this.context = {
       repository: undefined,
       cache: {},
@@ -24,6 +25,10 @@ class Ocbetree {
       ]);
     });
     $(window).on("scroll", (e) => this.handleScroll(e));
+  }
+
+  setAdapter(adapter) {
+    this.adapter = adapter;
   }
 
   addOrUpdateTab(path, temp) {
@@ -127,6 +132,23 @@ class Ocbetree {
         this.context.tabs.sort((a, b) => paths[a.path] - paths[b.path]);
         this.makingTabs(path);
       },
+    });
+
+    const $items = $tabs.find(".item");
+    const self = this;
+
+    $items.off("click");
+    $items.on("click", function () {
+      const path = $(this).attr("data-path");
+
+      self.adapter.selectFile(path);
+    });
+    $items.off("dblclick");
+    $items.on("dblclick", function () {
+      const path = $(this).attr("data-path");
+
+      self.addOrUpdateTab(path, false);
+      self.makingTabs(path);
     });
     this.fixMdHeader();
   }
