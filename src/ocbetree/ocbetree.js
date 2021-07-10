@@ -10,6 +10,7 @@ class Ocbetree {
       cache: {},
       isFirstLoad: true,
       tabs: [],
+      tabHistory: [],
     };
     onLocationChanged((href, oldHref) => {
       requestIdleCallback(() => {
@@ -58,6 +59,23 @@ class Ocbetree {
       }
 
       this.context.tabs[index] = tabData;
+    }
+
+    this.cleanTabHistory();
+
+    this.context.tabHistory.unshift(path);
+
+    if (this.context.tabHistory.length > 99) {
+      this.context.tabHistory.pop();
+    }
+  }
+
+  cleanTabHistory() {
+    for (let i = this.context.tabHistory.length - 1; i >= 0; i--) {
+      const path = this.context.tabHistory[i];
+      const index = _.findIndex(this.context.tabs, (v) => v.path === path);
+
+      if (index === -1) this.context.tabHistory.splice(i, 0);
     }
   }
 
@@ -111,7 +129,7 @@ class Ocbetree {
       return `
         <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}" data-path="${tab.path}">
           <div class="${contentClass}">${tab.name}</div>
-          <div class="actions"><span>✕</span></div>
+          <div class="actions"><span data-action="remove" data-path="${tab.path}">✕</span></div>
         </div>
       `;
     };
@@ -134,9 +152,19 @@ class Ocbetree {
       },
     });
 
-    const $items = $tabs.find(".item");
     const self = this;
+    const $items = $tabs.find(".item");
+    const $closeButtons = $tabs.find('[data-action="remove"]');
+    const _remove = (path, isActive) => {
+      console.log("remove:", path, isActive);
+    };
 
+    $closeButtons.off("click");
+    $closeButtons.on("click", function (e) {
+      e.stopPropagation();
+
+      _remove($(this).attr("data-path"), $(this).is(".active"));
+    });
     $items.off("click");
     $items.on("click", function () {
       const path = $(this).attr("data-path");
@@ -149,6 +177,18 @@ class Ocbetree {
 
       self.addOrUpdateTab(path, false);
       self.makingTabs(path);
+    });
+    $items.off("mousedown");
+    $items.on("mousedown", function (e) {
+      if (e.which === 2) {
+        e.preventDefault();
+      }
+    });
+    $items.off("mouseup");
+    $items.on("mouseup", function (e) {
+      if (e.which === 2) {
+        _remove($(this).attr("data-path"), $(this).is(".active"));
+      }
     });
     this.fixMdHeader();
   }
