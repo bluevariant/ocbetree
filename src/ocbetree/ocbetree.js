@@ -382,14 +382,8 @@ class Ocbetree {
 
     const defaultScroll = this.defaultScroll();
     const tabIndex = _.findIndex(this.context.tabs, (v) => v.path === path);
-    let pathScroll = 0;
-    const tab = JSON.parse(JSON.stringify(this.context.tabs[tabIndex]));
-
-    console.log(tab, tabIndex !== 1 && typeof tab.scroll !== "undefined");
-
-    if (tabIndex !== 1 && typeof tab.scroll !== "undefined") {
-      pathScroll = tab.scroll.y;
-    }
+    const tab = this.context.tabs[tabIndex];
+    const pathScroll = Object.keys(tab).includes("scroll") ? tab.scroll.y : 0;
 
     return Math.max(pathScroll, defaultScroll);
   }
