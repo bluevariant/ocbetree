@@ -47,7 +47,11 @@ class Ocbetree {
       }
     } else {
       tabData = this.context.tabs[index];
-      tabData.temp = !!temp;
+
+      if (tabData.temp) {
+        tabData.temp = !!temp;
+      }
+
       this.context.tabs[index] = tabData;
     }
   }
@@ -88,20 +92,20 @@ class Ocbetree {
     }
 
     const $tabs = $1.find(".tabs");
-    const tabs = [];
+    const tabs = this.context.tabs;
 
-    if (!this.context.cache[path]) {
-      let tempIndex = _.findIndex(tabs, (v) => {});
-    }
-
-    _.forEach(this.context.cache, (v, k) => {
-      const name = k.split("/").pop();
-
-      tabs[v.index] = {
-        name,
-        path: k,
-      };
-    });
+    // if (!this.context.cache[path]) {
+    //   let tempIndex = _.findIndex(tabs, (v) => {});
+    // }
+    //
+    // _.forEach(this.context.cache, (v, k) => {
+    //   const name = k.split("/").pop();
+    //
+    //   tabs[v.index] = {
+    //     name,
+    //     path: k,
+    //   };
+    // });
 
     const maxWidth = 100 / tabs.length;
     const _renderTab = (tab) => {

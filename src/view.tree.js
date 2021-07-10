@@ -11,6 +11,7 @@ class TreeView {
         this.$jstree.open_node(target);
       })
       .on("click", this._onItemClick.bind(this))
+      .on("dblclick", this._onDblClick.bind(this))
       .jstree({
         core: {
           multiple: false,
@@ -155,9 +156,37 @@ class TreeView {
         adapter.downloadFile(downloadUrl, downloadFileName);
       } else {
         refocusAfterCompletion();
-        newTab ? adapter.openInNewTab(href) : adapter.selectFile(href);
+
+        if (newTab) {
+          adapter.openInNewTab(href);
+        } else {
+          adapter.selectFile(href);
+          Ocbetree.invoke().addOrUpdateTab(href, true);
+          Ocbetree.invoke().makingTabs(href);
+        }
       }
     }
+  }
+
+  _onDblClick(event) {
+    let $target = $(event.target);
+
+    if ($target.is("i.jstree-icon")) {
+      $target = $target.parent();
+    }
+
+    $target = $target.is("a.jstree-anchor") ? $target : $target.parent();
+
+    if ($target.is(".octotree-patch")) {
+      $target = $target.parent();
+    }
+
+    if (!$target.is("a.jstree-anchor")) return;
+
+    const path = $target.attr("href");
+
+    Ocbetree.invoke().addOrUpdateTab(path, false);
+    Ocbetree.invoke().makingTabs(path);
   }
 
   async syncSelection(repo) {
