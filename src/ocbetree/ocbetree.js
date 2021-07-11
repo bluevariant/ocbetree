@@ -434,8 +434,17 @@ class Ocbetree {
 
   defaultScroll() {
     const github = OcbetreeConstants.GITHUB;
+    let top;
 
-    return github.INITIAL_SCROLL_TOP;
+    $('[data-target="readme-toc.content"]').each(function () {
+      const offset = $(this).offset();
+
+      if (offset && offset.top > 0) {
+        top = offset.top - OcbetreeConstants.GITHUB.TABS_HEIGHT;
+      }
+    });
+
+    return top > 0 ? top : github.INITIAL_SCROLL_TOP;
   }
 
   isCached(path) {
