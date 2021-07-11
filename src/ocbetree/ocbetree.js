@@ -11,6 +11,7 @@ class Ocbetree {
       isFirstLoad: true,
       tabs: [],
       tabHistory: [],
+      loadingPath: undefined,
     };
     onLocationChanged((href, oldHref) => {
       requestIdleCallback(() => {
@@ -159,8 +160,12 @@ class Ocbetree {
     const maxWidth = 100 / tabs.length;
     const _renderTab = (tab) => {
       const isActive = tab.path === path;
-      const itemClass = isActive ? "item active" : "item";
+      let itemClass = isActive ? "item active" : "item";
       const contentClass = tab.temp ? "content temp" : "content";
+
+      if (isActive && this.context.loadingPath === path) {
+        itemClass += " loading";
+      }
 
       return `
         <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}" data-path="${tab.path}">
@@ -321,11 +326,15 @@ class Ocbetree {
     const path = OcbetreeUtils.getPathWithoutAnchor(url.pathname);
 
     if (["pjax:end"].includes(pjaxEventName)) {
+      this.context.loadingPath = undefined;
+
       this.handleCache(path);
       this.cleanCache();
       window.scrollTo(0, this.calcScrollTo(path));
     } else if (["pjax:start"].includes(pjaxEventName)) {
       this.fixFooter();
+
+      this.context.loadingPath = path;
     }
   }
 
