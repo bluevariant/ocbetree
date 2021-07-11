@@ -4,7 +4,7 @@
 I made a variant of Octotree with some pro features.
 
 - Multiple tabs
-- Github theme compatibility
+- GitHub theme compatibility
 - Improve tabs UX
   + Drag/drop tabs
   + Middle click to close tab
