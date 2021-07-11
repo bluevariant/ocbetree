@@ -1,7 +1,7 @@
 
 ## Features
 
-I made a variant of Octotree with some pro feature
+I made a variant of Octotree with some pro features.
 
 - Multiple tabs
 - Github theme compatibility
