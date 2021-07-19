@@ -169,9 +169,13 @@ class Ocbetree {
       }
 
       return `
-        <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${tab.name}" data-path="${tab.path}">
-          <div class="${contentClass}">${tab.name}</div>
-          <div class="actions"><span data-action="remove" data-path="${tab.path}">✕</span></div>
+        <div class="${itemClass}" style="max-width: ${maxWidth}%" title="${
+        tab.name
+      }" data-path="${tab.path}">
+          <div class="${contentClass}">${decodeURIComponent(tab.name)}</div>
+          <div class="actions"><span data-action="remove" data-path="${
+            tab.path
+          }">✕</span></div>
         </div>
       `;
     };
